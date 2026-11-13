@@ -1,8 +1,10 @@
- Include the official jair.cls / JAIR author kit in the project for submission.
+% Include the official jair.cls / JAIR author kit in the project for submission.
 \IfFileExists{jair.cls}{\documentclass{jair}}{\documentclass[manuscript,nonacm,screen]{acmart}}
 % Fallback layout only, not JAIR's official review format.
 \makeatletter
-\@ifclassloaded{acmart}{\setcopyright{none}\settopmatter{printacmref=false,printccs=false,printfolios=true}\acmDOI{}\acmISBN{}\acmConference{}{}{}}{}
+\@ifclassloaded{acmart}{\setcopyright{none}\settopmatter{printacmref=true,printccs=false,printfolios=true}\acmDOI{}\acmISBN{}\acmConference{}{}{}}{}
+\JAIRTrack{Survey}
+\JAIRAE{JAIR Editorial Board}
 \makeatother
 \usepackage{booktabs}
 \usepackage{multirow}
@@ -132,13 +134,15 @@ We distinguish five resource dimensions. First, \emph{billable token consumption
 The following decomposition is an \emph{author-proposed accounting framework}, not a numerical result reported by any single primary study. It is intended to make hidden overhead explicit across technique families.
 
 A useful accounting identity for a deployed system is:
-\[
+%
+\begin{equation*}
 C_{\mathrm{total}} =
 C_{\mathrm{API}} + C_{\mathrm{aux}} + C_{\mathrm{infra}} + C_{\mathrm{operations}},
-\]
+\end{equation*}
+%
 where \(C_{\mathrm{API}}\) denotes the direct cost of model calls, \(C_{\mathrm{aux}}\) denotes auxiliary models and services (e.g., embedding, compression, judging, or retrieval), \(C_{\mathrm{infra}}\) denotes compute, memory, storage, and network resources, and \(C_{\mathrm{operations}}\) denotes operational costs. The supplied studies do not all measure these components. Consequently, a reported reduction in one component should not be interpreted as a reduction in \(C_{\mathrm{total}}\) unless the remaining components and added overhead are also measured or bounded.
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
 \begin{tikzpicture}[
   process/.style={draw, rounded corners=2pt, thick, align=center, font=\small,
@@ -166,10 +170,12 @@ where \(C_{\mathrm{API}}\) denotes the direct cost of model calls, \(C_{\mathrm{
 \caption{Author-developed cost-accounting framework, synthesising the distinct resources targeted by the reviewed techniques. The diagram is a conceptual synthesis, not a measured system architecture.}
 \Description{A request passes through an optimisation decision and model-serving stack. Cost is decomposed into direct API usage, auxiliary overhead, infrastructure, and operations; evaluation combines cost, latency, quality and reliability.}
 \label{fig:cost-accounting}
-\end{figure*}
+\end{figure}
 
 
 \subsection{Five families of optimisation}
+
+We distinguish five primary optimisation families identified across the reviewed literature, each targeting distinct resource mechanisms:
 
 \begin{figure*}[t]
 \centering
@@ -413,8 +419,9 @@ Consequently, no cost saving is classified as quality-preserving solely because 
 \caption{Examples of validity limitations identified in the author-provided paper summaries; not a completed formal risk-of-bias assessment.}
 \label{tab:quality-caveats}
 \centering
-\footnotesize
-\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{0.14\textwidth} >{\RaggedRight\arraybackslash}p{0.29\textwidth} >{\RaggedRight\arraybackslash}X@{}}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{0.12\textwidth} >{\RaggedRight\arraybackslash}p{0.28\textwidth} >{\RaggedRight\arraybackslash}X@{}}
 \toprule Record & Reported limitation & Consequence for synthesis \\
 \midrule
 SL 2 \cite{S02} & Pure simulation with 50 prompts; no model run. & Cache-hit simulations do not establish answer quality or production cost. \\
@@ -435,8 +442,8 @@ The source extraction sheet contains individual headline results, but the report
 \caption{Illustrative efficiency--quality trade-offs. Values are reported by each source and are not pooled.}
 \label{tab:tradeoff-examples}
 \centering
-\footnotesize
-\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{0.17\textwidth} >{\RaggedRight\arraybackslash}p{0.24\textwidth} >{\RaggedRight\arraybackslash}p{0.25\textwidth} >{\RaggedRight\arraybackslash}X@{}}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{0.18\textwidth} >{\RaggedRight\arraybackslash}p{0.24\textwidth} >{\RaggedRight\arraybackslash}p{0.26\textwidth} >{\RaggedRight\arraybackslash}X@{}}
 \toprule Study & Efficiency measure & Quality / risk measure & Interpretation \\
 \midrule
 TCRA-LLM \cite{S39} & Up to 65\% fewer retrieved tokens & Accuracy changes with compression mode & Token saving depends on the compressor and its baseline. \\
