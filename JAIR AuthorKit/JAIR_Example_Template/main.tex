@@ -1,0 +1,696 @@
+ Include the official jair.cls / JAIR author kit in the project for submission.
+\IfFileExists{jair.cls}{\documentclass{jair}}{\documentclass[manuscript,nonacm,screen]{acmart}}
+% Fallback layout only, not JAIR's official review format.
+\makeatletter
+\@ifclassloaded{acmart}{\setcopyright{none}\settopmatter{printacmref=false,printccs=false,printfolios=true}\acmDOI{}\acmISBN{}\acmConference{}{}{}}{}
+\makeatother
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{url}
+\usepackage{microtype}
+\usepackage{longtable}
+
+\usepackage{ragged2e}
+\usepackage{needspace}
+\usepackage{float}
+\usepackage{etoolbox}
+\usepackage{caption}
+\setlength{\emergencystretch}{3em}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.13}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,shapes.geometric,backgrounds}
+
+\title{Token and Cost Optimization in Large Language Models: A Resource-Centric Systematic Literature Review of Techniques, Evaluation Metrics, and Quality-Cost Trade-offs}
+
+\author{Md Mostafizur Rahaman}
+\email{bsse1320@iit.du.ac.bd}
+\affiliation{
+  \institution{Institute of Information Technology, University of Dhaka}
+  \city{Dhaka}
+  \country{Bangladesh}
+}
+\author{Ishtiaque Zahid}
+\email{ishtiaque-cse@sust.edu}
+\affiliation{
+  \institution{Shahjalal University of Science and Technology}
+  \city{Sylhet}
+  \country{Bangladesh}
+}
+\author{Md Nasir Uddin}
+\email{bsse1310@iit.du.ac.bd}
+\affiliation{
+  \institution{Institute of Information Technology, University of Dhaka}
+  \city{Dhaka}
+  \country{Bangladesh}
+}
+\author{Busrat Jahan Sabiha}
+\email{bsse1311@iit.du.ac.bd}
+\affiliation{
+  \institution{Institute of Information Technology, University of Dhaka}
+  \city{Dhaka}
+  \country{Bangladesh}
+}
+
+\begin{abstract}
+\textbf{Background:} LLM inference efficiency depends on more than token counts: caching, compression, model selection, and serving methods affect different cost components and can alter answer quality.
+
+\textbf{Objectives:} We classify token- and cost-optimisation methods and examine how studies measure efficiency alongside quality and reliability.
+
+\textbf{Methods:} The supplied files record 1,229 search records from Google Scholar, IEEE Xplore, and Crossref. The full-text log contains 55 records (37 included; 18 excluded), whereas the extraction sheet contains 41 records, four without a matching inclusion decision. Two log-included records are held out: one is analytical-only and one could not be independently verified from the supplied full text. We retain all 41 extracted study records in an evidence map and analyse an auditable 35-record empirical subset separately; both denominators and selection limitations are explicit.
+
+\textbf{Results:} The source-reported 41-record map contains 18 semantic-caching and seven prompt/prefix-caching records. The audited 35-study empirical subset contains 14 semantic-caching, six prefix-caching, six input-reduction, two token-pruning studies, two budget-control studies, and five system/serving studies. Latency is reported by 18 studies, task-accuracy metrics by 18, cost by 14, and token usage by 10. Reported outcomes are heterogeneous and are not pooled.
+
+\textbf{Conclusions:} No optimisation family is universally preferable. The evidence supports workload-specific selection and joint reporting of direct cost, auxiliary overhead, latency, task quality, and reliability. Model-routing studies named in the original protocol are missing from the original screened set; a supplementary coverage audit identifies this as a material gap.
+\end{abstract}
+
+\keywords{large language models, inference cost, token efficiency, semantic caching, prompt compression, prompt caching, token budgeting, systematic literature review}
+
+\begin{CCSXML}
+<ccs2012>
+ <concept>
+  <concept_id>10010147.10010257</concept_id>
+  <concept_desc>Computing methodologies~Natural language processing</concept_desc>
+  <concept_significance>500</concept_significance>
+ </concept>
+ <concept>
+  <concept_id>10002951.10003317</concept_id>
+  <concept_desc>Information systems~Data management systems</concept_desc>
+  <concept_significance>300</concept_significance>
+ </concept>
+</ccs2012>
+\end{CCSXML}
+\ccsdesc[500]{Computing methodologies~Natural language processing}
+\ccsdesc[300]{Information systems~Data management systems}
+
+\begin{document}
+\maketitle
+\pagestyle{plain}
+
+\section{Introduction}
+
+Large language models are increasingly deployed in conversational services, question answering, retrieval-augmented generation (RAG), code assistance, analytics, and agentic workflows. Their inference cost is not a single quantity. Depending on the deployment, it can include billed input tokens, billed output tokens, repeated API calls, embedding and retrieval operations, GPU time, memory, energy, and the latency experienced by users. The cost of a request can therefore rise even when the number of generated tokens is unchanged, and token reduction does not guarantee lower end-to-end cost if the optimisation introduces additional model calls or infrastructure overhead.
+
+The literature contains several distinct strategies for controlling these costs. Prompt compression removes or rewrites input content before inference; prompt engineering changes the structure of the request and may also affect reasoning length; semantic caching reuses a response to a semantically similar query \cite{S15,S21,S32}; prefix caching reuses computation for shared input prefixes \cite{S01,S14,S34}; token pruning reduces computation inside a model \cite{S07,S33}; token budgeting limits cumulative resource use \cite{S28,S40}; and serving methods change resource allocation and scheduling \cite{S22,S24}. Model routing and LLM cascades add a further family: they choose among models with different cost and capability profiles. FrugalGPT studies prompt adaptation, approximation, and cascades as ways to reduce the cost of using model APIs \cite{FrugalGPT}; Hybrid LLM develops a quality-aware, query-difficulty router between smaller and larger models \cite{HybridLLM}; and RouteLLM learns routers that select between stronger and weaker models using preference data \cite{RouteLLM}.
+
+These techniques cannot be compared by a single percentage. A cache hit rate, a reduction in billed input tokens, a reduction in GPU instances, and a latency improvement measure different outcomes. Moreover, an optimisation may shift cost from one component to another. A compressor can shorten the main model's prompt but add a separate inference call; semantic caching can avoid a model call but return a stale or contextually incorrect answer; and token pruning can reduce internal computation without reducing the number of tokens billed by a commercial API. An evaluation that reports only a resource-saving metric can therefore overstate the practical benefit.
+
+This review synthesises the supplied evidence on token and cost optimisation and organises it around the resource being saved, the stage of the inference pipeline at which the technique acts, and the quality evidence reported alongside the saving. The review also audits the reproducibility of the source screening and extraction records. This audit is necessary because a systematic review's conclusions depend not only on the included studies but also on whether the search and selection process can be reconstructed.
+
+\subsection{Related JAIR surveys and positioning}
+
+Three JAIR surveys are particularly relevant to the positioning of this work. \emph{Language-Models-as-a-Service: Overview of a New Paradigm and its Challenges} analyses evaluation, benchmarking, accessibility, reproducibility, reliability, and trustworthiness in proprietary language-model services \cite{JAIRLMaaS}. \emph{Agentic Large Language Models, a Survey} organises work on reasoning, acting, and interaction in agentic systems \cite{JAIRAgentic}. Most directly, \emph{Doing More with Less: A Survey on Routing Strategies for Resource Optimisation in Large Language Model-Based Systems} reviews model-routing strategies for improving efficiency and resource use \cite{JAIRRoutingSurvey}. The present review is intended to complement these surveys by synthesising caching, prompt/context reduction, model-internal token reduction, workflow budgets, and serving-level methods, and by examining how the included studies measure resource savings jointly with output quality. It does not claim novelty in model routing. Indeed, the absence of model-to-model routing studies from the current extraction set is a coverage defect that must be resolved before the review can make a comprehensive claim about the declared scope.
+
+\subsection{Research questions}
+
+The overarching question is:
+
+\begin{quote}
+How effective are existing token and cost optimisation techniques in reducing the inference costs of large language models while maintaining output quality across different application contexts?
+\end{quote}
+
+Four research questions operationalise this objective:
+
+\begin{description}[leftmargin=1.3cm,style=nextline]
+\item[RQ1] What techniques have been proposed for token and cost optimisation in LLM-based applications?
+\item[RQ2] What evaluation metrics, benchmarks, and experimental methodologies are used to assess these optimisation techniques?
+\item[RQ3] What effects do the proposed techniques have on token consumption, inference cost, computational efficiency, and output quality?
+\item[RQ4] What quality--cost trade-offs, methodological limitations, and research gaps are identified in the existing literature?
+\end{description}
+
+The review's intended contribution is an evidence-oriented taxonomy that distinguishes five optimisation families, maps each family to the resource it reduces, and makes explicit whether the reported saving is accompanied by evidence about task quality or reliability.
+
+\section{Conceptual framework}
+
+\subsection{A resource-accounting view of LLM optimisation}
+
+We distinguish five resource dimensions. First, \emph{billable token consumption} includes input and output tokens processed by a commercial API. Second, \emph{model-call expenditure} captures calls avoided through response reuse or cascades. Third, \emph{internal computation} includes GPU time, memory, KV-cache movement, and other hardware costs. Fourth, \emph{workflow expenditure} captures the cumulative resource budget across multi-step agents. Fifth, \emph{service performance} includes time-to-first-token (TTFT), time-per-output-token (TPOT), end-to-end latency, throughput, and service-level objective (SLO) attainment. These dimensions overlap but are not interchangeable.
+
+The following decomposition is an \emph{author-proposed accounting framework}, not a numerical result reported by any single primary study. It is intended to make hidden overhead explicit across technique families.
+
+A useful accounting identity for a deployed system is:
+\[
+C_{\mathrm{total}} =
+C_{\mathrm{API}} + C_{\mathrm{aux}} + C_{\mathrm{infra}} + C_{\mathrm{operations}},
+\]
+where \(C_{\mathrm{API}}\) denotes the direct cost of model calls, \(C_{\mathrm{aux}}\) denotes auxiliary models and services (e.g., embedding, compression, judging, or retrieval), \(C_{\mathrm{infra}}\) denotes compute, memory, storage, and network resources, and \(C_{\mathrm{operations}}\) denotes operational costs. The supplied studies do not all measure these components. Consequently, a reported reduction in one component should not be interpreted as a reduction in \(C_{\mathrm{total}}\) unless the remaining components and added overhead are also measured or bounded.
+
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[
+  process/.style={draw, rounded corners=2pt, thick, align=center, font=\small,
+     minimum height=0.75cm, text width=2.65cm},
+  component/.style={draw, rounded corners=2pt, align=center, font=\footnotesize,
+     text width=2.7cm, minimum height=1.05cm, inner sep=4pt},
+  arr/.style={-{Latex[length=2mm]},thick}
+]
+\node[process] (request) at (0,0) {Request / workload};
+\node[process] (policy) at (3.65,0) {Optimisation decision};
+\node[process] (llm) at (7.30,0) {LLM / serving stack};
+\node[process] (out) at (10.95,0) {Answer / task outcome};
+\draw[arr] (request) -- (policy);
+\draw[arr] (policy) -- (llm);
+\draw[arr] (llm) -- (out);
+\node[component] (api) at (0,-1.85) {\textbf{Direct cost}\\Input/output tokens; calls};
+\node[component] (aux) at (3.65,-1.85) {\textbf{Added overhead}\\Embedding; compression; routing};
+\node[component] (infra) at (7.30,-1.85) {\textbf{Infrastructure}\\GPU; memory; storage; network};
+\node[component] (ops) at (10.95,-1.85) {\textbf{Operations}\\Cache invalidation; monitoring};
+\node[draw, rounded corners=2pt, thick, text width=12.65cm, align=center,
+  minimum height=0.85cm,font=\small] (measures) at (5.48,-3.55) {
+  \textbf{Evaluate together:} actual cost \textbar{} latency / throughput \textbar{} task quality \textbar{} correctness / freshness};
+\foreach \n in {api,aux,infra,ops}{\draw[arr] (\n.south) -- ++(0,-0.28) -| (measures.north);}
+\end{tikzpicture}
+\caption{Author-developed cost-accounting framework, synthesising the distinct resources targeted by the reviewed techniques. The diagram is a conceptual synthesis, not a measured system architecture.}
+\Description{A request passes through an optimisation decision and model-serving stack. Cost is decomposed into direct API usage, auxiliary overhead, infrastructure, and operations; evaluation combines cost, latency, quality and reliability.}
+\label{fig:cost-accounting}
+\end{figure*}
+
+
+\subsection{Five families of optimisation}
+
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[
+ family/.style={draw,rounded corners=2pt,thick,text width=3.85cm,
+      minimum height=1.10cm,align=left,inner sep=5pt,font=\small},
+ arrow/.style={-{Latex[length=2mm]},thick}
+]
+\node[family] (a) at (0,0) {\textbf{Response / prefix reuse}\\Semantic and KV-cache methods};
+\node[family] (b) at (4.8,0) {\textbf{Input reduction}\\Compression and prompt design};
+\node[family] (c) at (9.6,0) {\textbf{Model-internal efficiency}\\Pruning and token selection};
+\node[family] (d) at (2.4,-1.65) {\textbf{Workflow budgets}\\Token caps; budget policies};
+\node[family] (e) at (7.2,-1.65) {\textbf{Serving / infrastructure}\\Scheduling; memory; placement};
+\node[draw,thick,rounded corners=2pt,align=center,text width=12.5cm,
+ minimum height=0.65cm,font=\small] (metrics) at (4.8,-3.35)
+ {Measure saved resources and added overhead alongside quality, accuracy and reliability};
+\foreach \n in {a,b,c,d,e}{\draw[arrow] (\n.south) -- ++(0,-0.22) -| (metrics.north);}
+\end{tikzpicture}
+\caption{Five-family taxonomy developed from the coded review records. The families are non-equivalent: each targets a different cost mechanism.}
+\Description{Five boxes group reuse, input reduction, internal efficiency, workflow budgets and serving; each points to a common evaluation layer including costs, added overhead, quality and reliability.}
+\label{fig:taxonomy}
+\end{figure*}
+
+\textbf{Reuse-based optimisation (caching).} Semantic caching stores query--response pairs and returns a cached answer when a new query is judged sufficiently similar. A successful hit can avoid the entire LLM call, but similarity errors and stale answers create quality risks. Prompt/prefix caching reuses the processed representation of a shared prefix, typically through a KV cache or provider-side prompt cache. It reduces repeated prefill work; it does not generally eliminate response generation for the new request.
+
+\textbf{Input reduction.} Prompt/context compression shortens the input supplied to the main model \cite{S30,S36,S39}. Prompt optimisation and engineering change the prompt structure, demonstrations, or reasoning instructions \cite{S13,S18,S19}. These approaches can reduce input tokens and, where reasoning is affected, output tokens. Their net benefit depends on the cost and latency of the compressor or prompt-search procedure and on whether essential information is retained.
+
+\textbf{Model-internal token reduction.} Token pruning and prioritisation remove or down-weight tokens during model inference. These methods target internal compute and memory. For a self-hosted model, this can reduce serving cost; for a commercial API, it does not necessarily change the billed input length because the provider receives the original prompt.
+
+\textbf{Budget control.} Token budgeting and budget-aware reasoning impose explicit limits on the resources consumed by an agent or workflow. The unit of control is the task or workflow rather than one model call. A budget can prevent runaway loops but may also cause early termination or incomplete task execution.
+
+\textbf{System and serving optimisation.} This family includes GPU-pool routing by request size, remote data-access caching for agents, conversation-history trimming, provider token-accounting audits, layer allocation, and scheduling across edge devices. These techniques primarily affect infrastructure, latency, and service capacity. Some also reduce the prompt indirectly, but their primary reported outcomes are often not billed token counts.
+
+\section{Review methodology}
+
+\subsection{Protocol and PICOC}
+
+The supplied protocol structures the review using Population, Intervention, Comparison, Outcome, and Context (PICOC), following systematic-review guidance \cite{Kitchenham,PRISMA}. The population is LLMs and LLM-based applications. Interventions include prompt engineering, prompt compression, context optimisation, token budgeting, caching, model routing, and adaptive model selection. Comparisons include unoptimised prompts, baseline models, and alternative techniques. Outcomes include token use, inference cost, latency, compute efficiency, accuracy, response quality, semantic preservation, and quality--cost trade-offs. Contexts include question answering, conversational AI, code generation, RAG, and practical deployment environments.
+
+The protocol defines the publication window as 1 January 2022 through 25 September 2026, English-language studies, and journal articles, conference papers, and eligible empirical preprints with accessible full text. It excludes work focused exclusively on pretraining, training efficiency, or hardware optimisation without relevant inference-level evidence. Secondary surveys are intended for background and citation searching, not for the primary effectiveness synthesis.
+
+\subsection{Search execution recorded in the supplied files}
+
+The protocol proposed Scopus, IEEE Xplore, and Web of Science as principal databases, with ACL Anthology and Google Scholar as supplementary sources. The retained search workbook, however, records 66 Google Scholar records, 163 IEEE Xplore records, and 1,000 Crossref records (total 1,229). No Scopus or Web of Science exports are present in the supplied materials. Crossref returned exactly 1,000 records; in the absence of pagination or query logs, it is not possible to determine whether this is the complete result set or a retrieval cap. The methods in this manuscript therefore describe the sources evidenced by the workbook, not the databases proposed in the protocol.
+
+The protocol contains one primary and two supplementary Boolean queries covering token optimisation, prompt/context compression, caching, model routing, inference cost, and evaluation outcomes. The workbook does not preserve the exact executed query for each source, field restrictions, filters, result pages, or a per-query execution log. Some merged records carry a retrieval timestamp of 26 September 2026, one day after the stated publication cut-off of 25 September 2026. The original exports are needed to verify the actual search date and ensure that no post-cut-off publications entered the sample. Accordingly, the search is only partially reproducible from the retained files.
+
+\subsection{Screening and eligibility}
+
+The protocol specifies title/abstract screening followed by full-text eligibility assessment and proposes independent screening by two reviewers. The retained spreadsheet contains one set of decisions but does not contain two reviewer-specific decision columns, an adjudication log, or an inter-rater agreement statistic. We therefore cannot verify that independent dual screening was completed and do not claim that it was.
+
+The inclusion criteria require primary research on LLM inference or application-level token/cost optimisation and empirical evidence for at least one relevant outcome. A direct baseline comparison is not mandatory for inclusion, but comparative-effectiveness conclusions should be restricted to studies with suitable comparisons. The exclusion criteria remove out-of-window, non-English, inaccessible, out-of-scope, insufficiently documented, duplicate, and non-empirical publications.
+
+\subsection{Selection-count reconciliation}
+
+The archived selection records do not support the original PRISMA figure. The workbook summary records 1,229 identified records, 860 duplicates removed, 369 records after deduplication, 111 after title screening, and 59 after abstract screening. The full-text screening worksheet contains 55 records, of which 37 are marked INCLUDE and 18 EXCLUDE. Thus, four of the 59 records reported as advancing from abstract screening have no matching row in the full-text log. Separately, the extraction table contains 41 study records; four of these (SL 16, SL 31, SL 32, and SL 34) have no matching INCLUDE decision in the full-text log. These are two distinct reconciliation problems and must not be assumed to refer to the same four records.
+
+The full-text log marks 37 records INCLUDE. A post-screening eligibility audit holds out two of these from the empirical synthesis: SL 20, indexed as “daptive Neural Token Compression…”, has inconsistent title metadata and no verifiable full text in the supplied package; SL 11, Category-Aware Semantic Caching, is coded in the extraction sheet as an analytical lookup/break-even analysis rather than an empirical evaluation, which does not satisfy the protocol's empirical-evidence criterion. SL 11 is retained as contextual analytical work but not counted in the empirical sample. The resulting empirical synthesis contains 35 studies. This reconstructed flow is an audit of the supplied records, not a claim that the original screening process fully complied with PRISMA 2020. In particular, the four records missing between the 59-record summary and the 55-row screening log are \emph{not} assumed to be the same four records that occur only in the 41-record extraction sheet. Until original exports and screening decisions are retrieved, no single 41-study PRISMA inclusion box can be justified.
+
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[
+ box/.style={draw,rounded corners=2pt,thick,align=center,text width=4.2cm,
+ minimum height=0.65cm,inner sep=4pt,font=\small},
+ side/.style={draw,rounded corners=2pt,dashed,align=left,text width=6.0cm,
+ minimum height=0.65cm,inner sep=4pt,font=\footnotesize},
+ arr/.style={-{Latex[length=2mm]},thick}
+]
+\node[box] (a) at (0,0) {Identified: 1,229};
+\node[side] (da) at (6.75,0) {860 duplicates removed; 369 unique records};
+\node[box] (b) at (0,-1.02) {After title screen: 111};
+\node[side] (db) at (6.75,-1.02) {258 excluded by subtraction (369--111)};
+\node[box] (c) at (0,-2.04) {After abstract screen: 59};
+\node[side] (dc) at (6.75,-2.04) {52 excluded by subtraction (111--59)};
+\node[box] (d) at (0,-3.06) {Full-text log: 55};
+\node[side] (dd) at (6.75,-3.06) {\textbf{Gap A:} four records between summary and logged full texts};
+\node[box] (e) at (0,-4.08) {Log: 37 include; 18 exclude};
+\node[side] (de) at (6.75,-4.08) {\textbf{Gap B:} 41 extraction rows; four lack matching INCLUDE decisions};
+\node[box] (f) at (0,-5.10) {Empirical subset: 35};
+\node[side] (df) at (6.75,-5.10) {SL 11 analytical-only; SL 20 unverified. Original mapping retains all 41 records.};
+\foreach \x/\y in {a/b,b/c,c/d,d/e,e/f}{\draw[arr] (\x.south)--(\y.north);}
+\end{tikzpicture}
+\caption{Transparent reconstruction of the supplied screening records. This is an \emph{audit diagram}, not a validated PRISMA 2020 flow. Gap A and Gap B are separate unresolved discrepancies.}
+\Description{Records proceed from 1229 identified to 369 deduplicated, 111 title-screened, 59 abstract-screened, and 55 full-text log rows, of which 37 are marked included; the 41-record extraction map and 35-record audited empirical subset are explicitly distinguished.}
+\label{fig:selection-audit}
+\end{figure*}
+
+\begin{table}[t]
+\caption{Reconciliation of selection records.}
+\label{tab:prisma-audit}
+\centering
+\small
+\begin{tabularx}{\linewidth}{l r X}
+\toprule
+Source & Count & Interpretation \\
+\midrule
+Search summary & 1,229 & Google Scholar 66; IEEE Xplore 163; Crossref 1,000. \\
+After deduplication & 369 & 860 duplicates removed. \\
+After title / abstract screening & 111 / 59 & Summary counts; stage exclusions are derived by subtraction. \\
+Abstract/full-text worksheets & 55 & Four of the 59 summary records have no matching log row. \\
+Full-text screening log & 37 included; 18 excluded & The 55 logged records sum correctly to 55. \\
+Extraction table & 41 & Four records lack a matching INCLUDE decision. \\
+Empirical synthesis & 35 & SL 20 is unverified; SL 11 is analytical-only and does not meet the empirical criterion. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Data extraction and synthesis}
+
+The extraction table records study title, year, method category, models, datasets, dataset type, metrics, headline results, baselines, evaluation type, and application domain. The report assigns each study to one method category and one application domain. Dataset-level counts may count a study more than once when multiple datasets are used. We summarise frequencies and ranges descriptively. We do not pool effect sizes because the included studies use different models, workloads, baselines, metrics, and cost definitions. The report's cross-study medians are treated as descriptive summaries only, not as expected deployment effects.
+
+The protocol proposed methodological-quality assessment based on research objectives, experimental design, baseline selection, metrics, reporting, and reproducibility. The retained extraction workbook does not contain a completed study-level quality score or appraisal rationale. Consequently, the current synthesis does not weight findings by methodological quality. This is an additional limitation that must be corrected or explicitly addressed in the final review.
+
+\subsection{Keyword co-occurrence analysis}
+
+The project report contains a VOSviewer image, but the RIS export, thesaurus file, VOSviewer project, and term-selection log were not supplied. The visible figure is insufficient to verify the underlying term counts, exclusion rules or thematic coverage; its validity as a bibliometric analysis therefore cannot be established from the supplied screenshot alone. We therefore do not reproduce it as a corpus-level keyword map; replacing it with a fabricated or manually redrawn co-occurrence network would misrepresent the underlying corpus. A valid co-occurrence figure must be regenerated from the complete, deduplicated bibliographic corpus using a documented thesaurus, counting method, minimum occurrence threshold, and VOSviewer version. The revised figures in this manuscript are transparent descriptive diagrams generated from the supplied counts; they are not presented as bibliometric network analysis.
+
+\section{Results}
+
+\subsection{Two evidence sets and denominators}
+
+The supplied extraction worksheet and the new study-summary document both cover 41 study identifiers (SL 1--41). This is the \emph{source-reported evidence map}, not a verified PRISMA inclusion count. The full-text screening worksheet records 37 INCLUDE decisions. Four extraction entries (SL 16, 31, 32, 34) lack matching inclusion records, and two of the 37 log-included entries are not counted in the empirical subset: SL 11 provides analytical rather than experimental results, and SL 20 has unresolved full-text/metadata evidence. Thus, study-map statistics use a denominator of 41 and audited empirical statistics use a denominator of 35. These sets answer different questions, and neither is represented as a fully reconciled systematic-review sample.
+
+The additional paper-summary document provides valuable study-level caveats, including six quality-flagged studies (SL 2, 20, 21, 23, 33 and 35) and five papers that were not yet integrated into the earlier comparative-analysis table (SL 15, 31, 32, 34 and 37). We preserve these distinctions rather than silently assigning unverified records to the empirical set.
+
+\subsection{Publication years and study landscape}
+
+The empirical evidence set contains 35 records published between 2023 and September 2026. The year distribution is one study (2.9\%) in 2023, six (17.1\%) in 2024, seven (20.0\%) in 2025, and 21 (60.0\%) in 2026. Thus, 28 of 35 records (80.0\%) are dated 2025 or 2026. The 2026 count is a partial-year count and must not be interpreted as a full-year publication total.
+
+Dataset-type coding for the 35 empirical records assigns 15 studies (42.9\%) to public benchmarks only, six (17.1\%) to public plus custom/synthetic data, ten (28.6\%) to custom/synthetic data only, two (5.7\%) to proprietary/production data, and two (5.7\%) to undisclosed data. This distribution indicates that a substantial portion of the evidence depends on custom or synthetic workloads, limiting direct replication and external validity. The extraction workbook contains multiple datasets per study; dataset-level frequency counts should be regenerated from the cleaned extraction sheet before making claims about the number of distinct datasets or the most frequently reused benchmark.
+
+
+\subsection{Interpreting the two study counts}
+
+To avoid the ambiguity highlighted during manuscript review, we distinguish \emph{the source extraction inventory} (all 41 SL identifiers) from \emph{the auditable empirical subset} (35 identifiers). The former documents what the project team extracted; the latter is a conservative analysis restricted to full-text INCLUDE records with empirical evidence recorded in the supplied files. Neither is a validated final PRISMA count because four records are absent from the full-text log, the screening summary contains four unmatched records, and original search exports are incomplete. The source-inventory count is used to describe research \emph{coverage}; the empirical count is used for the main comparative synthesis. Both denominators and their purposes are displayed side by side below; an increase from 35 to 41 must never be made by simply changing the denominator.
+
+\subsection{Method taxonomy}
+
+Table~\ref{tab:methods} distinguishes the 41 extracted records from the 35-record empirical synthesis. In the extracted map, semantic caching and prompt/prefix caching account for 18 and seven records, respectively (25/41; 61.0\%). In the empirical subset, these categories contain 14 and six records (20/35; 57.1\%). These percentages answer different questions and must not be represented as estimates from the same study-selection flow.
+
+\begin{table}[H]
+\caption{Method families in the full 41-record extraction map versus the 35-study empirical subset. The two sets have different evidential status, so their percentages are descriptive and not pooled.}
+\label{tab:methods}
+\centering
+\small
+\begin{tabularx}{\textwidth}{>{\RaggedRight\arraybackslash}X r r r r}
+\toprule
+Method category & 41-map $n$ & Share of 41 & Empirical $n$ & Share of 35 \\
+\midrule
+Semantic caching & 18 & 43.9\% & 14 & 40.0\% \\
+Prompt/prefix caching & 7 & 17.1\% & 6 & 17.1\% \\
+Inference/application optimisation & 4 & 9.8\% & 4 & 11.4\% \\
+Prompt/context compression & 4 & 9.8\% & 3 & 8.6\% \\
+Prompt optimisation/engineering & 3 & 7.3\% & 3 & 8.6\% \\
+Token pruning/prioritisation & 2 & 4.9\% & 2 & 5.7\% \\
+Token budgeting/budget-aware reasoning & 2 & 4.9\% & 2 & 5.7\% \\
+Inference serving/scheduling & 1 & 2.4\% & 1 & 2.9\% \\
+\midrule
+Total & \textbf{41} & \textbf{100\%} & \textbf{35} & \textbf{100\%} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The eight categories can be grouped into five families: reuse-based optimisation (20 studies), input reduction (six), model-internal token reduction (two), budget control (two), and system/serving optimisation (five). The family distinction matters because the saved resource differs. A semantic-cache hit can avoid an entire model call; prefix caching mainly reuses prefill computation; compression reduces the input presented to the model; pruning reduces internal processing; budgeting constrains a workflow; and serving optimisation changes infrastructure utilisation or latency.
+
+The retained evidence set contains one GPU-pool routing study, which assigns requests according to token budget; it does not contain model-to-model routing studies. This is a substantive coverage gap because the original PICOC and search protocol explicitly include model routing and adaptive model selection. A supplementary scope audit identified established empirical work on FrugalGPT, Hybrid LLM, RouteLLM, BEST-Route, and Select-then-Route, as well as the RouterBench evaluation corpus and a unified routing/cascading framework \cite{FrugalGPT,HybridLLM,RouteLLM,BESTRoute,SelectThenRoute,RouterBench,UnifiedRouting}. These papers are discussed separately below and are not added to the 35-study empirical denominator because they were not processed through the original screening log. A revised systematic search and screening exercise is required before they can be incorporated into the primary synthesis; this contextual table does not add records to either denominator.
+
+\subsection{Application domains}
+
+Question answering and RAG form the largest application domain, with 11 studies (31.4\%). Chat services and general-purpose LLM APIs account for seven (20.0\%), and LLM serving infrastructure and edge deployment account for five (14.3\%). Reasoning and text classification and LLM agents/multi-step workflows each account for three studies (8.6\%); language modelling accounts for two (5.7\%). Data analytics and business intelligence account for two (5.7\%), while software engineering/program repair and cybersecurity/web-attack detection each account for one (2.9\%). The distribution indicates that the evidence is concentrated in QA/RAG and general-purpose chat workloads.
+
+\subsection{Evaluation metrics}
+
+The most frequently reported metric families are latency and task accuracy, each used by 18 studies (51.4\%). Cost is reported by 14 studies (40.0\%), cache-hit/miss metrics by 14 (40.0\%), token usage by ten (28.6\%), reliability by ten (28.6\%), output-quality metrics by eight (22.9\%), throughput by five (14.3\%), and memory/resource measures by two (5.7\%). In the 41-record source map, the reported counts are higher (for example, latency in 24 and token usage in 12 records); Table~\ref{tab:metrics} displays both denominators instead of silently replacing the author-supplied 41-study corpus with the audited subset.
+
+\begin{table}[H]
+\caption{Metric families: source-reported 41-record map versus audited 35-study empirical subset. The reported metric categories overlap, and a study may contribute to several rows. The 41-map totals have not been independently re-extracted from all primary PDFs.}
+\label{tab:metrics}
+\centering
+\small
+\begin{tabularx}{\linewidth}{>{\RaggedRight\arraybackslash}X r r}
+\toprule
+Metric family & Source map /41 & Empirical /35 \\
+\midrule
+Latency & 24 & 18 \\
+Task accuracy & 20 & 18 \\
+Cost & 16 & 14 \\
+Cache-hit/miss & 15 & 14 \\
+Token usage & 12 & 10 \\
+Reliability & 12 & 10 \\
+Output quality & 9 & 8 \\
+Throughput & 6 & 5 \\
+Memory/resources & 6 & 2 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[x=0.28cm,y=0.55cm,>=Latex]
+\def\barh{0.34}
+\foreach \y/\lab/\val in {
+  0/Latency/18,
+  1/Task accuracy/18,
+  2/Cost/14,
+  3/Cache hit or miss/14,
+  4/Token usage/10,
+  5/Reliability/10,
+  6/Output quality/8,
+  7/Throughput/5,
+  8/Memory or resources/2
+}{
+  \node[anchor=east,font=\footnotesize] at (-0.35,\y+0.16) {\lab};
+  \draw[fill=gray!35,draw=black] (0,\y) rectangle (\val,\y+\barh);
+  \node[anchor=west,font=\footnotesize] at (\val+0.25,\y+0.16) {\val/35};
+}
+\draw[->,thick] (0,-0.35) -- (21,-0.35) node[right,font=\footnotesize]{Number of studies};
+\foreach \x in {0,5,10,15,20}{
+  \draw (\x,-0.35) -- (\x,-0.48);
+  \node[below,font=\scriptsize] at (\x,-0.48) {\x};
+}
+\end{tikzpicture}
+\caption{Evaluation metric coverage in the 35-record empirical subset (not the 41-record extraction map). The source-reported counts for all 41 records appear separately in Table~\ref{tab:metrics}.}
+\Description{Horizontal bar chart showing latency and task accuracy in 18 studies each, cost and cache hit/miss in 14 each, token usage and reliability in 10 each, output quality in 8, throughput in 5, and memory or resource use in 2.}
+\label{fig:metric-coverage}
+\end{figure}
+
+
+The difference between latency and token reporting is important. In the 20 retained caching studies, none is coded in the extraction sheet as directly reporting input/output token counts; caching papers instead emphasise cache hits, avoided calls, latency, and serving performance. All six retained input-reduction studies report token counts. Some caching studies measure the correctness of a cache decision rather than the correctness of the final generated answer. The two token-pruning studies rely on model-level measures such as perplexity and throughput; the extraction summary does not record downstream task accuracy for this family.
+
+Cost is frequently represented by a proxy. Examples include avoided API calls, GPU-instance counts, or estimated token-length cost. The report identifies actual monetary expenditure in only a subset of studies. For example, the TCRA-LLM cost reduction is modelled from assumed token counts and prices, whereas other studies report real API spend or production serving cost. Comparisons must therefore distinguish measured expenditure from cost proxies.
+
+\subsection{Evidence-quality and outcome-definition audit}
+
+The supplied 41-study summaries make six recurrent methodological observations. First, cache-hit precision and answer correctness are distinct: SL 32 reports improved cache-decision precision but does not directly measure end-answer quality; SL 41 similarly defines accuracy as cache-decision accuracy rather than answer accuracy. Second, temporal and conversational context can make an otherwise similar answer inappropriate (SL 10, 15, 31 and 32). Third, false-positive cache hits may be more damaging than misses because a miss incurs another model call whereas a false hit delivers a wrong answer. Fourth, reported benefits depend strongly on workload structure: repetition-rich synthetic query variants may inflate hit rates (SL 21, 27). Fifth, mean latency alone hides tail-latency and transfer costs (SL 1 and 29). Finally, some records have incomplete experiments or insufficiently clear baselines (SL 2, 20, 23, 33 and 35).
+
+Consequently, no cost saving is classified as quality-preserving solely because a paper reports cache-hit accuracy or unchanged output \emph{by design}. The synthesis treats task quality, cache-decision reliability, and resource savings as separate measures, and flags analytical, simulation-only, or demo-only evidence where applicable.
+
+
+\begin{table*}[t]
+\caption{Examples of validity limitations identified in the author-provided paper summaries; not a completed formal risk-of-bias assessment.}
+\label{tab:quality-caveats}
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{0.14\textwidth} >{\RaggedRight\arraybackslash}p{0.29\textwidth} >{\RaggedRight\arraybackslash}X@{}}
+\toprule Record & Reported limitation & Consequence for synthesis \\
+\midrule
+SL 2 \cite{S02} & Pure simulation with 50 prompts; no model run. & Cache-hit simulations do not establish answer quality or production cost. \\
+SL 21 \cite{S21} & Query variants are highly repetitive; small hallucination test. & Reported hit/correctness gains may not transfer to diverse workloads. \\
+SL 23 \cite{S23} & Synthetic conversation lengths and extra processing. & End-to-end net saving is not established by token count alone. \\
+SL 33 \cite{S33} & Pruning evaluated mainly with perplexity. & Downstream task correctness is not demonstrated. \\
+SL 35 \cite{S35} & Interactive demo with incomplete dataset/reporting. & Insufficient evidence for generalisable savings. \\
+SL 20 \cite{S20} & Incomplete accessible full text and metadata. & Excluded from the empirical subset pending source verification. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Reported efficiency results}
+
+The source extraction sheet contains individual headline results, but the reported outcomes are not commensurate. A cache hit rate, reduction in API calls, reduction in GPU instances, percentage fewer input tokens, and lower end-to-end latency measure different resources. We therefore do not compute a pooled saving percentage or a cross-family median. Table~\ref{tab:tradeoff-examples} presents selected examples to illustrate the trade-offs; values are reported under each study's own setup and must not be interpreted as head-to-head comparisons.
+
+\begin{table*}[t]
+\caption{Illustrative efficiency--quality trade-offs. Values are reported by each source and are not pooled.}
+\label{tab:tradeoff-examples}
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{0.17\textwidth} >{\RaggedRight\arraybackslash}p{0.24\textwidth} >{\RaggedRight\arraybackslash}p{0.25\textwidth} >{\RaggedRight\arraybackslash}X@{}}
+\toprule Study & Efficiency measure & Quality / risk measure & Interpretation \\
+\midrule
+TCRA-LLM \cite{S39} & Up to 65\% fewer retrieved tokens & Accuracy changes with compression mode & Token saving depends on the compressor and its baseline. \\
+SAC-RAG \cite{S36} & 38--58\% fewer context tokens & EM decreases about 1--2 points & Savings can accompany measurable answer-quality loss. \\
+Condensed reasoning \cite{S13} & 53.1\% fewer reasoning tokens & MMLU 78.6\% to 75.2\% & Shorter reasoning need not preserve correctness. \\
+Context-based cache \cite{S15} & More cache hits at relaxed threshold & Higher risk of an incorrect hit & Cache precision and final-answer correctness differ. \\
+LANTERN \cite{S29} & Median latency 36.1 s to 2.1 s & P95 latency 46.2 s to 44.8 s & Large median gains may hide small tail-latency gains. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Supplementary scope audit: model routing and cascades}
+
+Model routing is explicitly included in the original PICOC, but the retained primary-study screening log contains no model-to-model routing paper. The following studies were identified in a targeted external coverage check. They demonstrate why routing must be represented in a complete review, but they are \emph{not} part of the 35-study empirical evidence set and must be screened and extracted under a revised search protocol before inclusion.
+
+\begin{table*}[t]
+\caption{Routing and cascade research missing from the original screening log; contextual evidence only.}
+\label{tab:routing-gap}
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{0.22\textwidth} >{\RaggedRight\arraybackslash}p{0.22\textwidth} >{\RaggedRight\arraybackslash}X@{}}
+\toprule Study & Main mechanism & Relevance to the declared review scope \\
+\midrule
+FrugalGPT \cite{FrugalGPT} & Model cascades & Selectively avoids expensive model calls. \\
+Hybrid LLM \cite{HybridLLM} & Difficulty-aware model routing & Balances quality and use of a stronger model. \\
+RouterBench \cite{RouterBench} & Routing evaluation corpus & Supports comparable model-routing benchmarks. \\
+RouteLLM \cite{RouteLLM} & Preference-trained router & Explicitly studies model quality--cost selection. \\
+Unified routing/cascading \cite{UnifiedRouting} & Decision-theoretic routing & Analyses quality--cost frontiers for selective escalation. \\
+BEST-Route \cite{BESTRoute} & Test-time compute allocation & Routes by query difficulty and sampling budget. \\
+Select-then-Route \cite{SelectThenRoute} & Taxonomy-guided router & Uses a selected model pool and confidence-driven routing. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+This coverage audit also changes the novelty assessment. JAIR has already published a survey devoted specifically to routing strategies for resource optimisation in LLM-based systems \cite{JAIRRoutingSurvey}. The present review should not claim to be a comprehensive routing survey. Its defensible distinction is a resource-centric synthesis across semantic and prefix caching, input reduction, model-internal token reduction, workflow budgeting, and serving, coupled with a metric-accounting framework that separates direct API cost, auxiliary optimisation overhead, infrastructure cost, latency, task quality, and reliability. That distinction must be supported by a completed search and a rigorous comparison with the JAIR routing survey.
+
+\section{Discussion}
+
+\subsection{Why no single optimisation method dominates}
+
+The five families address different cost mechanisms. Semantic caching is attractive when queries repeat and when the system can reliably detect semantic equivalence, preserve context, and invalidate stale responses. Its benefit is reduced when queries are unique or when embedding and vector-search overhead approaches the cost of a model call. Prefix caching is useful when requests share long system prompts, retrieved documents, or agent context. Its value depends on prefix reuse, cache capacity, and the cost of moving KV state between memory tiers.
+
+Prompt/context compression is most relevant when input contexts are long and contain redundant material. The benefit should be measured after accounting for compressor cost, information loss, and latency. Prompt engineering can reduce output tokens by changing reasoning instructions, but the trade-off is task dependent: shorter reasoning may reduce accuracy on tasks that require multi-step inference. Token pruning can improve internal efficiency on self-hosted models, but perplexity-only evidence is insufficient to establish application-level quality. Budget control is relevant to long-horizon agents, where a per-call token cap does not necessarily control the total cost of retries and tool use. System-level optimisation is most useful to operators who control the serving stack and can change GPU allocation, data access, or scheduling.
+
+\subsection{A workload-oriented decision framework}
+
+The evidence suggests that technique selection should begin with the source of avoidable cost rather than with a preferred algorithm. Table~\ref{tab:decision} gives a practical mapping. These recommendations are conditional and should not be read as universal performance rankings.
+
+\begin{table*}[t]
+\caption{Conditional choice of optimisation family and the evidence needed to justify it.}
+\label{tab:decision}
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{0.24\textwidth} >{\RaggedRight\arraybackslash}p{0.25\textwidth} >{\RaggedRight\arraybackslash}X@{}}
+\toprule Workload property & Candidate family & Minimum validation \\
+\midrule
+Repeated equivalent queries & Semantic caching & False/stale-hit rate, answer correctness, search overhead, net cost. \\
+Long shared prefixes & Prefix caching & Prefill time, memory/transfer cost, miss penalty, billing effects. \\
+Long redundant contexts & Prompt/context compression & Input and output tokens, downstream accuracy, compressor overhead. \\
+Heavy reasoning output & Prompt optimisation & Quality by task difficulty, reasoning tokens, run-to-run variation. \\
+Self-hosted GPU bottleneck & Token pruning and serving & GPU time, memory, throughput, latency and downstream quality. \\
+Long-horizon agents & Workflow budgeting & Cumulative tokens, tool calls, task completion and stopping failures. \\
+Mixed model cost/ability tiers & Model routing (scope gap) & Router overhead, escalation, calibration and quality--cost frontier. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Toward comparable cost--quality evaluation}
+
+A common evaluation protocol should report, at minimum, (i) input and output tokens separately; (ii) provider-reported and independently re-tokenised counts where provider accounting differs; (iii) direct monetary cost and the price schedule used; (iv) auxiliary model, embedding, judge, retrieval, and cache costs; (v) latency and throughput under a specified load; (vi) task quality and reliability; and (vii) workload characteristics, including query repetition, context length, query difficulty, and temporal drift. For caching, the evaluation should report both cache hit rate and correctness of the returned answer. For routing, it should report the quality--cost frontier rather than a single threshold result. For agents, the evaluation should include cumulative workflow cost, not only the cost of one model call.
+
+Studies should also disclose the baseline, model versions, prompts, decoding parameters, hardware, software versions, run counts, random seeds where relevant, and uncertainty or variation. A cost reduction without an explicit quality measure should be described as a resource reduction, not as quality-preserving optimisation.
+
+\subsection{Research agenda}
+
+The provisional evidence and the coverage audit motivate six research directions.
+
+\begin{enumerate}[leftmargin=1.5em]
+\item \textbf{Unified accounting.} Define comparable measures for billed tokens, avoided calls, auxiliary inference, GPU time, memory, storage, and end-to-end monetary cost. Report the resource saved and the resource added by each optimisation.
+\item \textbf{Quality-aware reuse.} Develop cache policies that incorporate context, answer correctness, freshness, and the cost of a false hit. Hit rate alone is an inadequate objective.
+\item \textbf{Adaptive hybrid systems.} Combine caching, compression, prompt optimisation, routing, and budgeting according to query characteristics and workload state, while measuring the overhead of the controller itself.
+\item \textbf{Long-term production evaluation.} Test methods under changing query distributions, knowledge freshness, cache growth, and realistic multi-turn sessions. Where production traces are private, provide anonymised workload statistics and executable evaluation configurations.
+\item \textbf{Downstream validation of internal pruning.} Extend token-pruning evaluation beyond perplexity to downstream task quality, factuality, latency, and memory across several architectures.
+\item \textbf{Agentic cost governance.} Evaluate workflow-level budgets under retries, tool calls, parallel branches, and hidden reasoning costs. Report task completion and failure modes alongside overspend prevention.
+\end{enumerate}
+
+\subsection{Implications for researchers and practitioners}
+
+For researchers, the central implication is that efficiency claims should be stated in terms of the resource actually measured. For practitioners, the appropriate technique depends on workload structure and control over the serving stack. A team using a commercial API may benefit most from semantic reuse, input reduction, or model routing; a team operating its own inference cluster may also benefit from KV-cache management, pruning, layer placement, and scheduling. In both cases, total cost and output quality must be evaluated together.
+
+\section{Threats to validity and limitations}
+
+\textbf{Selection validity.} The summary, screening worksheets, and extraction table do not reconcile. Four records reported after abstract screening lack matching log rows; four extracted records lack a matching INCLUDE decision; and two log-included records were held out from the empirical synthesis (SL 20 could not be verified; SL 11 was analytical-only). The 35-study empirical subset is an audited analytical denominator, not a definitive PRISMA final-inclusion number. Model-routing studies named in the protocol are also missing from the original search set.
+
+\textbf{Search reproducibility.} The protocol proposes Scopus and Web of Science, but the retained search records document Google Scholar, IEEE Xplore, and Crossref. Exact executed queries, database filters, and per-source execution dates are not fully preserved. The Crossref export count of 1,000 may reflect a retrieval cap. Some records were retrieved on 26 September 2026 despite the 25 September publication cut-off. These issues prevent independent reconstruction of the search.
+
+\textbf{Publication-status validity.} The 35-study set mixes journal articles, conference papers, and preprints. Publication status is not consistently coded, and some entries have incomplete or conflicting metadata. At least one included title could not be independently verified, and another logged inclusion did not meet the empirical-evidence criterion from the accessible bibliographic record. A final review must separate peer-reviewed evidence from preprints and remove or correct records that cannot be verified.
+
+\textbf{Measurement validity.} Studies use different metrics and definitions of cost. A cache hit, token reduction, GPU reduction, and monetary saving are not equivalent. Some results are based on synthetic workloads, assumed prices, or cost proxies. Cross-study ranges and medians are therefore descriptive and should not be interpreted as causal or pooled effects.
+
+\textbf{Quality-appraisal validity.} The retained workbook does not contain a completed study-level quality-appraisal table. The synthesis therefore does not weight findings by methodological quality. The protocol's proposed two-reviewer process is also not documented sufficiently to establish independent dual screening or inter-rater agreement.
+
+\textbf{External validity.} Public benchmarks, synthetic query sets, and single-deployment traces may not represent production workload diversity, temporal drift, or user-specific context. The findings should not be generalised to all LLM deployments.
+
+\textbf{Bibliographic validity.} Several records lack complete author lists, venue details, DOI values, or a clearly documented publication status. The title metadata for SL 20 is inconsistent between the extraction table and merged search export, and the full text was not available in the supplied materials; it is excluded from quantitative synthesis pending author verification. Every remaining reference must be checked against its publisher or archival record before submission.
+
+\section{Conclusion}
+
+The audited empirical evidence set contains 35 studies traceable to the full-text INCLUDE log after excluding four extraction-only records and holding out two log-included records: one analytical-only record that does not meet the empirical criterion and one record whose full text could not be verified. Within this set, caching is the largest family (21 studies, 58.3\%), followed by input reduction (six), system/serving optimisation (five), model-internal token reduction (two), and workflow budget control (two). Latency and task-accuracy metrics are reported more often than direct token usage. These patterns indicate that the literature often evaluates system speed or cache behaviour without measuring the token quantities that motivate token-efficiency claims.
+
+The evidence does not support a universal ranking of techniques or a single pooled saving percentage. Semantic caching is appropriate when semantically equivalent requests recur and freshness/correctness can be enforced; prefix caching targets repeated prefill; compression targets long contexts; prompt optimisation affects input and reasoning length; pruning targets internal computation; and budget/serving methods address workflow or infrastructure constraints. Each should be evaluated with its own overhead and with task quality and reliability.
+
+The review is not yet a fully reproducible or complete systematic review. The selection records do not reconcile, the exact executed database queries are missing, quality appraisal is not documented, and model-to-model routing studies within the declared scope were absent from the original screening set. The supplementary routing audit demonstrates the scope gap but does not repair the original PRISMA sample. A final journal submission requires a rerun of the search, formal screening of the routing literature, verification of all full texts and bibliographic records, completion of study-level quality appraisal, and deposition of the review data and search logs. Until those tasks are completed, the results should be treated as an evidence-audited working synthesis rather than a final systematic-review estimate.
+
+\section*{Author contributions}
+The supplied project report records the following contributions: Md Mostafizur Rahaman -- thematic synthesis of challenges, limitations, and future work; Ishtiaque Zahid -- comparative analysis; Md Nasir Uddin -- classification; Busrat Jahan Sabiha -- keyword co-occurrence analysis. The report notes that descriptive analysis was completed mostly in an earlier assignment. This author order reflects the authors' latest instruction; all authors must confirm the order, contributions, and final manuscript before submission.
+
+\section*{Funding}
+Funding information was not supplied. The authors must confirm whether the work received external or institutional funding.
+
+\section*{Competing interests}
+A competing-interests declaration was not supplied. All authors must confirm whether any competing interests exist.
+
+\section*{Data and materials availability}
+The source protocol, analysis report, and extraction workbook were supplied for this draft. The raw database exports, exact executed query log, deduplication rules, two-reviewer decisions, full-text exclusion log, quality-appraisal sheet, RIS export, VOSviewer thesaurus/project, and a reconciled extraction dataset are not yet deposited in a public repository. The authors should prepare a versioned repository deposit (including a README, data dictionary, screening decisions, and analysis scripts) and provide a persistent DOI before claiming public availability.
+
+\section*{Use of generative AI tools}
+This working draft was prepared with AI assistance for document analysis, synthesis, and language drafting. JAIR's policy makes the authors responsible for the originality, accuracy, and integrity of submitted content and requires careful review of AI-assisted text, references, and metadata. The authors must verify every claim and citation and approve any disclosure required by the journal before submission.
+
+\appendix
+\section{Study identifiers and extraction-set reconciliation}
+
+The full-text screening worksheet marks 37 records as INCLUDE. SL 11 is held out because the extraction sheet characterises it as analytical rather than empirical, contrary to the protocol's IC5 criterion. SL 20 is held out because the supplied package does not contain a verifiable full text and its title metadata is inconsistent (record metadata: \cite{S20}). The following 35 records form the empirical evidence set.
+
+\begin{itemize}[leftmargin=1.5em]
+\item Semantic caching (14): SL 4, 5, 6, 10, 12, 15, 21, 26, 27, 29, 35, 37, 38, 41.
+\item Prompt/prefix caching (6): SL 1, 2, 3, 9, 14, 25.
+\item Inference/application optimisation (4): SL 8, 17, 22, 23.
+\item Prompt/context compression (3): SL 30, 36, 39.
+\item Prompt optimisation/engineering (3): SL 13, 18, 19.
+\item Token pruning/prioritisation (2): SL 7, 33.
+\item Token budgeting/budget-aware reasoning (2): SL 28, 40.
+\item Inference serving/scheduling (1): SL 24.
+\end{itemize}
+
+Two log-included records are also held out of the empirical synthesis: SL 11 (analytical-only; no empirical evaluation recorded) and SL 20 (full text and metadata not independently verified). Four additional extraction-sheet records have no matching INCLUDE decision in the full-text log and are not counted in the synthesis: SL 16 (Continuous Semantic Caching for Low-Cost LLM Serving), SL 31 (LLM-Cache), SL 32 (MeanCache), and SL 34 (Prompt Caching on Flash). The four records missing between the abstract-stage summary count (59) and the full-text log (55) are a separate, unresolved discrepancy.
+
+\section{Source-reported inventory of all 41 records}
+
+Table~\ref{tab:forty-one} includes all 41 records in the extraction sheet and the supplied paper-summary document. It deliberately distinguishes the full \emph{source-reported map} from the audited 35-study empirical subset. Each record's publication metadata and outcome should be checked against the primary paper before final publication. The small quality tags are based on the \emph{Watch Out} / \emph{Quality flag} notes in the author-provided summaries; they are not a formal risk-of-bias score.
+
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{longtable}{@{}>{\RaggedRight\arraybackslash}p{0.07\linewidth} >{\RaggedRight\arraybackslash}p{0.40\linewidth} >{\RaggedRight\arraybackslash}p{0.46\linewidth}@{}}
+\caption{Forty-one study records, indexed by the supplied SL identifiers.}\label{tab:forty-one}\\
+\toprule
+ID & Study and method & Inclusion note / result provenance \\
+\midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize Table continued from previous page}\\
+\toprule ID & Study and method & Inclusion note / result provenance \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\textbf{1} & Distributed prompt caching at the edge \cite{S01}\newline\emph{Prompt/prefix caching} & Empirical subset; source-reported. TTFT decreased 93.12\%; time to last token decreased 50.07\% on full-cache hit. \\
+\textbf{2} & Active prompt caching in edge networks \cite{S02}\newline\emph{Prompt/prefix caching} & Empirical subset; source-reported. About 60\% simulated hit ratio; quality flag: no model was run. [Quality flag in author summaries.] \\
+\textbf{3} & Adaptive context assembly for repair \cite{S03}\newline\emph{Prompt/prefix caching} & Empirical subset; source-reported. Plausible bug-fix rate 51.5\%; cache-hit rate 62.3\%. \\
+\textbf{4} & Domain-specific embeddings for semantic caching \cite{S04}\newline\emph{Semantic caching} & Empirical subset; source-reported. Medical-domain pair matching: precision 0.87, recall 0.90, F1 0.89; not answer-quality testing. \\
+\textbf{5} & Ensemble embeddings for semantic caching \cite{S05}\newline\emph{Semantic caching} & Empirical subset; source-reported. Hit ratio 92\%; cached-answer quality was not directly checked. \\
+\textbf{6} & Asynchronous verified semantic caching \cite{S06}\newline\emph{Semantic caching} & Empirical subset; source-reported. Vetted-answer share: 19.4\% (LMArena), 8.6\% (SearchQueries); extra verification calls. \\
+\textbf{7} & Attention entropy and token importance \cite{S07}\newline\emph{Token pruning/prioritization} & Empirical subset; source-reported. Perplexity 25.72 (SD 21.93) at 70\% retention in one reported setting. \\
+\textbf{8} & Audit of token padding/accounting \cite{S08}\newline\emph{Inference/application optimization} & Empirical subset; source-reported. Token Padding Index spans 1.11 to 3.81 across selected providers. \\
+\textbf{9} & Cache-aware prompt compression \cite{S09}\newline\emph{Prompt/prefix caching} & Empirical subset; source-reported. Per-query cost US\$0.0073 in a reported scenario; compression adds processing overhead. \\
+\textbf{10} & CacheSense: freshness-aware semantic caching \cite{S10}\newline\emph{Semantic caching} & Empirical subset; source-reported. Hit 53\%; stale-hit 3\% vs 57\%; answer accuracy 0.85 vs 0.90 without caching. \\
+\textbf{11} & Category-aware semantic caching \cite{S11}\newline\emph{Semantic caching} & Analytical; held out of empirical subset. Analytical design only; estimated 3 ms vs 31 ms lookup, without model experiments. \\
+\textbf{12} & ChronosBI: BI caching and cost planning \cite{S12}\newline\emph{Semantic caching} & Empirical subset; source-reported. BI deployment: reported 2-fold speedup and 84.64\% accuracy; baseline accuracy not given. \\
+\textbf{13} & Condensed reasoning prompting \cite{S13}\newline\emph{Prompt optimization / engineering} & Empirical subset; source-reported. 53.1\% fewer tokens on MMLU, with accuracy 75.2\% vs 78.6\% for CoT. \\
+\textbf{14} & Prefix-cache-aware autoscaling \cite{S14}\newline\emph{Prompt/prefix caching} & Empirical subset; source-reported. GPU cost reduced 28\% in tested scenario; SLO attainment 99.2\%. \\
+\textbf{15} & Context-based semantic caching \cite{S15}\newline\emph{Semantic caching} & Empirical subset; source-reported. Response 3,262 ms to 580 ms; high threshold avoided wrong hits in the stated test. \\
+\textbf{16} & Continuous semantic caching \cite{S16}\newline\emph{Semantic caching} & Extraction-only; no matching INCLUDE decision. Regret 0.0061, reported 63.3\% lower than greedy; simulation and token-cost proxy. \\
+\textbf{17} & Cortex: knowledge caching for remote access \cite{S17}\newline\emph{Inference/application optimization} & Empirical subset; source-reported. Up to 3.6-fold throughput, more than 85\% cache hits and 4-fold latency gain. \\
+\textbf{18} & Cost-aware Bayesian prompt optimisation \cite{S18}\newline\emph{Prompt optimization / engineering} & Empirical subset; source-reported. Best in four of six prompt-optimisation scenarios; mean rank 1.83. \\
+\textbf{19} & Cost and efficacy of prompt engineering \cite{S19}\newline\emph{Prompt optimization / engineering} & Empirical subset; source-reported. GSM8K zero-shot CoT accuracy 95\% vs 73\% direct prompting in a reported setup. \\
+\textbf{20} & Adaptive neural token compression (unverified) \cite{S20}\newline\emph{Prompt/context compression} & Full-text/metadata unresolved; held out. Source summary claims 25\% fewer tokens; full text and exact metadata remain unverified. [Quality flag in author summaries.] \\
+\textbf{21} & DKC-LLM: dynamic knowledge caching \cite{S21}\newline\emph{Semantic caching} & Empirical subset; source-reported. Hits 63--67\%, calls reduced 60\%; repeated synthetic variants inflate reuse. [Quality flag in author summaries.] \\
+\textbf{22} & Dual-pool token-budget routing \cite{S22}\newline\emph{Inference/application optimization} & Empirical subset; source-reported. GPU count decreased 41.9\% (Azure trace) and 31.3\% (LMSYS trace). \\
+\textbf{23} & Edge-based context/token optimisation \cite{S23}\newline\emph{Inference/application optimization} & Empirical subset; source-reported. Reported token reductions 69\% at 50 messages and 83\% at 100; synthetic context. [Quality flag in author summaries.] \\
+\textbf{24} & Edge inference layer scheduling \cite{S24}\newline\emph{Inference serving / scheduling} & Empirical subset; source-reported. Communication decreased 54.7\%; processing time decreased 27.8\% in simulation. \\
+\textbf{25} & Prompt caching via embedding similarity \cite{S25}\newline\emph{Prompt/prefix caching} & Empirical subset; source-reported. Caching classifier AUC increased from 0.85 to 0.92. \\
+\textbf{26} & SphereLFU: semantic cache eviction \cite{S26}\newline\emph{Semantic caching} & Empirical subset; source-reported. Best mean-hit-distance outcome on seven of nine datasets; not answer quality. \\
+\textbf{27} & GPT Semantic Cache \cite{S27}\newline\emph{Semantic caching} & Empirical subset; source-reported. 61.6--68.8\% API calls avoided; 92.5--97.3\% of hits judged correct. \\
+\textbf{28} & Graph-of-Context for agentic workflows \cite{S28}\newline\emph{Token budgeting / budget-aware reasoning} & Empirical subset; source-reported. Task accuracy 25.0\% to 42.5\%; mean prompt tokens 54\% lower. \\
+\textbf{29} & LANTERN: security cascade with cache \cite{S29}\newline\emph{Semantic caching} & Empirical subset; source-reported. 64.8\% of escalations cached; median latency 36.1 s to 2.1 s, P95 barely changed. \\
+\textbf{30} & LinguaShrink: context compression \cite{S30}\newline\emph{Prompt/context compression} & Empirical subset; source-reported. Up to 26-fold compression; 1.43-fold lower latency in reported settings. \\
+\textbf{31} & LLM-Cache: multi-turn semantic caching \cite{S31}\newline\emph{Semantic caching} & Extraction-only; no matching INCLUDE decision. Cache precision 8.93 points above ContextCache; context-biased dialogue benchmark. \\
+\textbf{32} & MeanCache: user-centric semantic caching \cite{S32}\newline\emph{Semantic caching} & Extraction-only; no matching INCLUDE decision. Wrong cache hits 233 to 89; follow-up precision 0.66 to 0.98. \\
+\textbf{33} & Dynamic token pruning \cite{S33}\newline\emph{Token pruning/prioritization} & Empirical subset; source-reported. Throughput increased 40\%; memory decreased 20\%; perplexity worsened. [Quality flag in author summaries.] \\
+\textbf{34} & Flash-based prompt caching \cite{S34}\newline\emph{Prompt/prefix caching} & Extraction-only; no matching INCLUDE decision. Flash cache within 0.97--1.05 times DRAM TTFT on ShareGPT; SSD wear concern. \\
+\textbf{35} & Collision-aware semantic hashing \cite{S35}\newline\emph{Semantic caching} & Empirical subset; source-reported. Demo-only hashing: lookup about 1--5 ms; no dataset or final-answer evaluation. [Quality flag in author summaries.] \\
+\textbf{36} & SAC-RAG: adaptive RAG compression \cite{S36}\newline\emph{Prompt/context compression} & Empirical subset; source-reported. 38--58\% fewer context tokens; exact-match scores fall about 1--2 points. \\
+\textbf{37} & Semantic caching: online adaptation \cite{S37}\newline\emph{Semantic caching} & Empirical subset; source-reported. Online regret at least 11.75\% below baseline; 20-query synthetic experiment. \\
+\textbf{38} & Semantic cache for OLAP canonicalisation \cite{S38}\newline\emph{Semantic caching} & Empirical subset; source-reported. Cache-hit rate 82\%; 0\% false hits on reported synthetic query variants. \\
+\textbf{39} & TCRA-LLM: token compression for RAG \cite{S39}\newline\emph{Prompt/context compression} & Empirical subset; source-reported. 65\% fewer tokens; accuracy 90.2\% to 90.5\% in a selected setting. \\
+\textbf{40} & Token Budgets: agent incidents \cite{S40}\newline\emph{Token budgeting / budget-aware reasoning} & Empirical subset; source-reported. No budget overrun in 30 trials vs 30/30 for baseline; narrow case study. \\
+\textbf{41} & waLLMartCache: distributed semantic caching \cite{S41}\newline\emph{Semantic caching} & Empirical subset; source-reported. Cache-decision accuracy 64.8\% to 81.4\%; does not measure answer accuracy. \\
+\end{longtable}
+}
+
+\section{Study selection clarification}
+The original author-supplied SLR report summarises 41 extracted studies. The full-text log contains 37 included decisions, and the audited empirical subset contains 35 records because SL 11 is analytical and SL 20 is unverified. This does \textbf{not} mean that six papers have been shown to be irrelevant. Four extraction-only studies (SL 16, 31, 32, 34) await screening-log reconciliation and remain represented in the 41-study map. Exact inclusion decisions must be settled using the original screening exports, not by assuming the 41-record map was a final PRISMA sample.
+
+\section{JAIR reproducibility checklist: provisional responses}
+
+The checklist below is a draft assessment based on the supplied files. It must be completed and approved by the authors in the official JAIR template. The journal requires the checklist to be completed and submitted as an appendix.
+
+\begin{table*}[t]
+\caption{Provisional JAIR reproducibility checklist.}
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{0.43\textwidth} p{0.13\textwidth} X}
+\toprule
+Checklist item & Draft status & Evidence or required action \\
+\midrule
+All claims are clearly stated & Partially & Claims are bounded to the 35-study empirical set; selection and search gaps remain. \\
+Explanations show how evidence supports claims & Partially & Descriptive synthesis is present; primary-paper verification and corrected extraction are required. \\
+Limitations and assumptions are explicit & Yes (draft) & Selection, search, metric, and metadata limitations are stated. \\
+Conceptual outlines/pseudocode for new AI methods & N/A & The paper introduces no new AI algorithm. \\
+Design choices and protocols are motivated & Partially & PICOC and categories are described; exact search and screening logs are incomplete. \\
+Theoretical contribution & No & No new theorem or formal theoretical result is claimed. \\
+Computational experiments & No (subject to author confirmation) & The paper synthesises reported experiments; it does not report new model experiments. \\
+Use of datasets/literature data & Yes & Primary studies and their datasets are discussed; complete source-level citations must be verified. \\
+New dataset released with a license & No / not applicable & No new benchmark dataset is claimed. The extraction workbook should be deposited with a license if authors wish to share it. \\
+Preprocessing, deduplication, and screening details & Partially & The workbook contains partial logs, but the flow and screening decisions must be reconciled. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\section{Mandatory JAIR submission questions: draft responses}
+
+\textbf{1. Why is the work important to the AI community? (Maximum 150 words.)}
+
+The work develops a resource-centric taxonomy that separates repeated-call avoidance, prefill reuse, input compression, model-internal token reduction, workflow budgets, and serving optimisation. It also proposes a cost-accounting framework that distinguishes direct API expenditure from auxiliary model, infrastructure, and operational overhead, and maps these resources to latency, task quality, and reliability outcomes. This distinction is important because a reduction in one proxy (for example, cache misses or GPU instances) does not necessarily reduce total cost or preserve answer quality. The framework is intended to support workload-specific method selection and more comparable evaluation. The current evidence base remains provisional because the original search and screening records do not reconcile.
+
+\textbf{2. Which JAIR papers are closest, and how does this work differ? (Maximum 150 words.)}
+
+The closest JAIR paper is Varangot-Reille et al.'s 2026 survey of routing strategies, which focuses on when, why, and how LLM-based systems route queries to models or components. La Malfa et al. (2024) survey the language-model-as-a-service paradigm and its evaluation and reliability challenges; Plaat et al. (2025) survey agentic LLMs. The present work's intended distinction is a cross-layer synthesis of caching, input reduction, token pruning, workflow budgets, and serving, organised by the resource saved and the evaluation evidence required to establish a net cost--quality benefit. It does not claim to replace the routing survey; instead, routing is identified as a missing part of the original search and is treated as a scope-completeness issue.
+
+\textbf{3. Has any part been published or submitted elsewhere?}
+
+Draft response, subject to author confirmation: The work originated as a university course project/report submitted for academic assessment. It has not been published in a peer-reviewed journal or conference and is not under review elsewhere. The authors must confirm that no version has been publicly published, posted as a preprint, or submitted concurrently to another venue, and must accurately disclose the course-report precursor if requested by the editor.
+
+\nocite{S01,S02,S03,S04,S05,S06,S07,S08,S09,S10,S11,S12,S13,S14,S15,S17,S18,S19,S20,S21,S22,S23,S24,S25,S26,S27,S28,S29,S30,S33,S35,S36,S37,S38,S39,S40,S41,FrugalGPT,HybridLLM,RouterBench,RouteLLM,UnifiedRouting,BESTRoute,SelectThenRoute,JAIRRoutingSurvey,JAIRLMaaS,JAIRAgentic,PRISMA,Kitchenham,GundersenJAIR}
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+\end{document}
