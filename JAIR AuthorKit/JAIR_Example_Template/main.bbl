@@ -1,0 +1,903 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{54}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{} and \showURL{}.  The latter does
+%%% not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showURL}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showURL #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       {\relax}        \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+\makeatletter
+\@ifundefined{NAT@parse@date}{}{\let\NAT@parse@date@orig\NAT@parse@date}
+\@ifundefined{NAT@parse@date}{}{\def\NAT@parse@date#1#2#3#4#5#6@@{\NAT@parse@date@orig#1#2#3#4#5#6@@\def\NAT@tempyear{0000}\def\NAT@tempexlab{{?}}\ifx\NAT@year\NAT@tempyear\ifx\NAT@exlab\NAT@tempexlab\def\NAT@date{[n.\,d.]}\else\edef\NAT@date{[n.\,d.]\NAT@exlab}\fi\fi}}
+\makeatother
+
+\bibitem[Adeosun and Adelua(2026)]%
+        {S08}
+\bibfield{author}{\bibinfo{person}{Tobi Adeosun} {and} \bibinfo{person}{Mary
+  Adelua}.} \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{title}{Auditing Token Padding and Token Accounting in Large
+  Language Models: A Constraint-Adherence Metric and a Multi-Provider Empirical
+  Study}.
+\newblock \bibinfo{howpublished}{SSRN preprint}.
+\newblock
+\href{https://doi.org/10.2139/ssrn.7050418}{doi:\nolinkurl{10.2139/ssrn.7050418}}
+\newblock
+\shownote{Preprint; not peer reviewed in the cited record.}.
+
+
+\bibitem[Ahmadpanah et~al\mbox{.}(2026)]%
+        {S14}
+\bibfield{author}{\bibinfo{person}{S.~H. Ahmadpanah}, \bibinfo{person}{A.
+  Sahafi}, {and} \bibinfo{person}{S.~H. Erfani}.}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \showarticletitle{Context-Aware Autoscaling for Cost-Efficient Large
+  Language Model Inference With Prefix Cache Integration}.
+\newblock \bibinfo{journal}{\emph{IEEE Access, 14, 46024--46035}}
+  (\bibinfo{year}{2026}).
+\newblock
+\href{https://doi.org/10.1109/ACCESS.2026.3677249}{doi:\nolinkurl{10.1109/ACCESS.2026.3677249}}
+\newblock
+\shownote{Verify final volume/pages against IEEE version of record.}.
+
+
+\bibitem[Atalar et~al\mbox{.}(2026)]%
+        {S16}
+\bibfield{author}{\bibinfo{person}{Baran Atalar}, \bibinfo{person}{Xutong Liu},
+  \bibinfo{person}{Jinhang Zuo}, \bibinfo{person}{Siwei Wang},
+  \bibinfo{person}{Wei Chen}, {and} \bibinfo{person}{Carlee Joe-Wong}.}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{title}{Continuous Semantic Caching for Low-Cost LLM
+  Serving}.
+\newblock \bibinfo{howpublished}{arXiv preprint arXiv:2604.20021}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2604.20021}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Use the preprint available before the review cutoff; later venue
+  publication must not be backdated.}.
+
+
+\bibitem[Baccour et~al\mbox{.}(2025)]%
+        {S02}
+\bibfield{author}{\bibinfo{person}{E. Baccour}, \bibinfo{person}{A. Erbad},
+  \bibinfo{person}{A. Mohamed}, {et~al\mbox{.}}}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \bibinfo{title}{Active Prompt Caching in Edge Networks for Generative
+  AI and LLMs: An RL-Based Approach}.
+\newblock
+\urldef\tempurl%
+\url{https://ieeexplore.ieee.org/abstract/document/10978306/}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Author list and DOI incomplete in extraction workbook.}.
+
+
+\bibitem[Bindschaedler(2026)]%
+        {S38}
+\bibfield{author}{\bibinfo{person}{L. Bindschaedler}.}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{title}{Semantic Caching for OLAP via LLM-Based Query
+  Canonicalization (Extended Version)}.
+\newblock \bibinfo{howpublished}{arXiv preprint arXiv:2602.19811}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2602.19811}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Preprint.}.
+
+
+\bibitem[Biton and Friedman(2026)]%
+        {S26}
+\bibfield{author}{\bibinfo{person}{D.~D. Biton} {and} \bibinfo{person}{R.
+  Friedman}.} \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{title}{From Exact Hits to Close Enough: Semantic Caching for
+  LLM Embeddings}.
+\newblock \bibinfo{howpublished}{arXiv preprint arXiv:2603.03301}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2603.03301}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Preprint.}.
+
+
+\bibitem[Chen et~al\mbox{.}(2024)]%
+        {FrugalGPT}
+\bibfield{author}{\bibinfo{person}{Lingjiao Chen}, \bibinfo{person}{Matei
+  Zaharia}, {and} \bibinfo{person}{James Zou}.}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{FrugalGPT: How to Use Large Language Models While
+  Reducing Cost and Improving Performance}.
+\newblock \bibinfo{journal}{\emph{Transactions on Machine Learning Research}}
+  (\bibinfo{year}{2024}).
+\newblock
+\urldef\tempurl%
+\url{https://openreview.net/forum?id=cSimKw5p6R}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Supplementary scope-audit paper; absent from original 41-study set.}.
+
+
+\bibitem[Cherukuri(2025)]%
+        {S19}
+\bibfield{author}{\bibinfo{person}{Milind Cherukuri}.}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \bibinfo{title}{Cost, Complexity, and Efficacy of Prompt Engineering
+  Techniques for Large Language Models}.
+\newblock
+\href{https://doi.org/10.71097/ijsat.v16.i2.2584}{doi:\nolinkurl{10.71097/ijsat.v16.i2.2584}}
+\newblock
+\shownote{Verify journal indexing and peer-review status; do not imply top-tier
+  venue.}.
+
+
+\bibitem[Dang et~al\mbox{.}(2026)]%
+        {S10}
+\bibfield{author}{\bibinfo{person}{S. Dang}, \bibinfo{person}{C. Chen},
+  \bibinfo{person}{K. Wu}, \bibinfo{person}{Z. Liu}, {et~al\mbox{.}}}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{title}{CacheSense: Freshness-Aware Semantic Caching with
+  Selective Invalidation for LLM-Serving Backends}.
+\newblock \bibinfo{howpublished}{ResearchGate-hosted manuscript record}.
+\newblock
+\urldef\tempurl%
+\url{https://www.researchgate.net/publication/404941448_CacheSense_Freshness-Aware_Semantic_Caching_with_Selective_Invalidation_for_LLM-Serving_Backends}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Publisher/preprint status and canonical source require
+  verification.}.
+
+
+\bibitem[Dasgupta et~al\mbox{.}(2024)]%
+        {S41}
+\bibfield{author}{\bibinfo{person}{S. Dasgupta}, \bibinfo{person}{A. Wagh},
+  \bibinfo{person}{L. Parsai}, \bibinfo{person}{B. Gupta}, {et~al\mbox{.}}}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \bibinfo{title}{waLLMartCache: A Distributed, Multi-Tenant and
+  Enhanced Semantic Caching System for LLMs}.
+\newblock \bibinfo{howpublished}{Springer conference proceedings chapter}.
+\newblock
+\href{https://doi.org/10.1007/978-3-031-78183-4_15}{doi:\nolinkurl{10.1007/978-3-031-78183-4_15}}
+\newblock
+\shownote{Verify full author list and proceedings title.}.
+
+
+\bibitem[Dekoninck et~al\mbox{.}(2025)]%
+        {UnifiedRouting}
+\bibfield{author}{\bibinfo{person}{Jasper Dekoninck},
+  \bibinfo{person}{Maximilian Baader}, {and} \bibinfo{person}{Martin Vechev}.}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \showarticletitle{A Unified Approach to Routing and Cascading for
+  LLMs}. In \bibinfo{booktitle}{\emph{Proceedings of the 42nd International
+  Conference on Machine Learning (ICML 2025)}}.
+\newblock
+\urldef\tempurl%
+\url{https://proceedings.mlr.press/v267/dekoninck25a.html}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Supplementary scope-audit paper; absent from original 41-study set.}.
+
+
+\bibitem[Ding et~al\mbox{.}(2024)]%
+        {HybridLLM}
+\bibfield{author}{\bibinfo{person}{Dujian Ding}, \bibinfo{person}{Ankur
+  Mallick}, \bibinfo{person}{Chi Wang}, \bibinfo{person}{Robert Sim},
+  \bibinfo{person}{Subhabrata Mukherjee}, \bibinfo{person}{Victor Ruhle},
+  \bibinfo{person}{Laks V.~S. Lakshmanan}, {and} \bibinfo{person}{Ahmed~H.
+  Awadallah}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Hybrid LLM: Cost-Efficient and Quality-Aware Query
+  Routing}. In \bibinfo{booktitle}{\emph{International Conference on Learning
+  Representations (ICLR)}}.
+\newblock
+\urldef\tempurl%
+\url{https://proceedings.iclr.cc/paper_files/paper/2024/hash/b47d93c99fa22ac0b377578af0a1f63a-Abstract-Conference.html}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Supplementary scope-audit paper; not part of the original screened
+  evidence set.}.
+
+
+\bibitem[Ding et~al\mbox{.}(2025)]%
+        {BESTRoute}
+\bibfield{author}{\bibinfo{person}{Dujian Ding}, \bibinfo{person}{Ankur
+  Mallick}, \bibinfo{person}{Shaokun Zhang}, \bibinfo{person}{Chi Wang},
+  \bibinfo{person}{Daniel Madrigal}, \bibinfo{person}{Mirian Del~Carmen
+  Hipolito~Garcia}, \bibinfo{person}{Menglin Xia}, \bibinfo{person}{Laks V.~S.
+  Lakshmanan}, \bibinfo{person}{Qingyun Wu}, {and} \bibinfo{person}{Victor
+  Ruhle}.} \bibinfo{year}{2025}\natexlab{}.
+\newblock \showarticletitle{BEST-Route: Adaptive LLM Routing with Test-Time
+  Optimal Compute}. In \bibinfo{booktitle}{\emph{Proceedings of the 42nd
+  International Conference on Machine Learning (ICML 2025)}}.
+\newblock
+\urldef\tempurl%
+\url{https://proceedings.mlr.press/v267/ding25d.html}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Supplementary scope-audit paper; absent from original 41-study set.}.
+
+
+\bibitem[Ghaffari et~al\mbox{.}(2025)]%
+        {S05}
+\bibfield{author}{\bibinfo{person}{S. Ghaffari}, \bibinfo{person}{Z.
+  Bahranifard}, {and} \bibinfo{person}{M. Akbari}.}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \bibinfo{title}{An Ensemble Embedding Approach for Improving Semantic
+  Caching Performance in LLM-Based Systems}.
+\newblock \bibinfo{howpublished}{arXiv preprint arXiv:2507.07061}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2507.07061}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Preprint.}.
+
+
+\bibitem[Gill et~al\mbox{.}(2025a)]%
+        {S04}
+\bibfield{author}{\bibinfo{person}{W. Gill}, \bibinfo{person}{J. Cechmanek},
+  \bibinfo{person}{T. Hutcherson}, {et~al\mbox{.}}}
+  \bibinfo{year}{2025}\natexlab{a}.
+\newblock \bibinfo{title}{Advancing Semantic Caching for LLMs with
+  Domain-Specific Embeddings and Synthetic Data}.
+\newblock \bibinfo{howpublished}{arXiv preprint arXiv:2504.02268}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2504.02268}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Preprint; verify version and full author list.}.
+
+
+\bibitem[Gill et~al\mbox{.}(2025b)]%
+        {S32}
+\bibfield{author}{\bibinfo{person}{Waris Gill}, \bibinfo{person}{Mohamed
+  Elidrisi}, \bibinfo{person}{Pallavi Kalapatapu}, \bibinfo{person}{Ammar
+  Ahmed}, \bibinfo{person}{Ali Anwar}, {and} \bibinfo{person}{Muhammad~Ali
+  Gulzar}.} \bibinfo{year}{2025}\natexlab{b}.
+\newblock \showarticletitle{MeanCache: User-Centric Semantic Caching for LLM
+  Web Services}. \bibinfo{howpublished}{2025 IEEE International Parallel and
+  Distributed Processing Symposium (IPDPS), 1298--1310}.
+\newblock
+\href{https://doi.org/10.1109/IPDPS64566.2025.00117}{doi:\nolinkurl{10.1109/IPDPS64566.2025.00117}}
+\newblock
+\shownote{Workbook author metadata is incorrect; corrected authors from
+  conference/author records. Not in full-text screening log.}.
+
+
+\bibitem[Grushail et~al\mbox{.}(2024)]%
+        {S20}
+\bibfield{author}{\bibinfo{person}{Dominic Grushail}, \bibinfo{person}{Edward
+  Benedetti}, \bibinfo{person}{Frederick Bjornson}, \bibinfo{person}{George
+  Roussos}, {and} \bibinfo{person}{Henry Moretti}.}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \bibinfo{title}{daptive Neural Token Compression: A Novel
+  Optimization Technique for Enhancing Large Language Models}.
+\newblock
+\href{https://doi.org/10.31219/osf.io/3uvqf}{doi:\nolinkurl{10.31219/osf.io/3uvqf}}
+\newblock
+\shownote{Title reproduced as indexed in the merged search export; the
+  extraction sheet adds an initial A. Full text was not available in the
+  supplied materials and the record is excluded from empirical synthesis
+  pending verification.}.
+
+
+\bibitem[Gundersen et~al\mbox{.}(2024)]%
+        {GundersenJAIR}
+\bibfield{author}{\bibinfo{person}{Odd~Erik Gundersen}, \bibinfo{person}{Malte
+  Helmert}, {and} \bibinfo{person}{Holger Hoos}.}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Improving Reproducibility in AI Research: Four
+  Mechanisms Adopted by JAIR}.
+\newblock \bibinfo{journal}{\emph{Journal of Artificial Intelligence Research}}
+   \bibinfo{volume}{81} (\bibinfo{year}{2024}), \bibinfo{pages}{1019--1041}.
+\newblock
+\href{https://doi.org/10.1613/jair.1.16905}{doi:\nolinkurl{10.1613/jair.1.16905}}
+\newblock
+\shownote{JAIR reproducibility checklist source.}.
+
+
+\bibitem[Habibi and Ercetin(2025)]%
+        {S24}
+\bibfield{author}{\bibinfo{person}{S. Habibi} {and} \bibinfo{person}{O.
+  Ercetin}.} \bibinfo{year}{2025}\natexlab{}.
+\newblock \showarticletitle{Edge-LLM Inference With Cost-Aware Layer Allocation
+  and Adaptive Scheduling}.
+\newblock \bibinfo{journal}{\emph{IEEE Access, 13, 131614--131637}}
+  (\bibinfo{year}{2025}).
+\newblock
+\href{https://doi.org/10.1109/ACCESS.2025.3592308}{doi:\nolinkurl{10.1109/ACCESS.2025.3592308}}
+\newblock
+\shownote{Verify final metadata.}.
+
+
+\bibitem[Hu et~al\mbox{.}(2024)]%
+        {RouterBench}
+\bibfield{author}{\bibinfo{person}{Qitian~Jason Hu}, \bibinfo{person}{Jacob
+  Bieker}, \bibinfo{person}{Xiuyu Li}, \bibinfo{person}{Nan Jiang},
+  \bibinfo{person}{Benjamin Keigwin}, \bibinfo{person}{Gaurav Ranganath},
+  \bibinfo{person}{Kurt Keutzer}, {and} \bibinfo{person}{Shriyash~Kaustubh
+  Upadhyay}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \bibinfo{title}{RouterBench: A Benchmark for Multi-LLM Routing
+  System}.
+\newblock \bibinfo{howpublished}{arXiv preprint arXiv:2403.12031}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2403.12031}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Supplementary scope-audit paper; absent from original 41-study set.}.
+
+
+\bibitem[Jeon et~al\mbox{.}(2026)]%
+        {S03}
+\bibfield{author}{\bibinfo{person}{S.~M. Jeon}, \bibinfo{person}{H.~M. Han},
+  \bibinfo{person}{B.~S. Seo}, {et~al\mbox{.}}}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{title}{Adaptive Context Assembly Engine with Token Budget
+  Optimization and Prompt Caching for LLM-Based Automated Program Repair}.
+\newblock
+\urldef\tempurl%
+\url{https://koreascience.kr/article/CFKO202617739664339.page}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Author list and proceedings metadata require verification.}.
+
+
+\bibitem[Jin and Feng(2026)]%
+        {S31}
+\bibfield{author}{\bibinfo{person}{H. Jin} {and} \bibinfo{person}{H. Feng}.}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \showarticletitle{LLM-Cache: An Efficient Context-Aware Semantic
+  Caching Framework for Distributed LLM Inference Services}.
+  \bibinfo{howpublished}{2026 IEEE 46th International Conference on Distributed
+  Computing Systems Workshops (ICDCSW)}.
+\newblock
+\href{https://doi.org/10.1109/ICDCSW72724.2026.00031}{doi:\nolinkurl{10.1109/ICDCSW72724.2026.00031}}
+\newblock
+\shownote{Not present in the full-text screening log; add screening decision
+  and extraction trace.}.
+
+
+\bibitem[Keith et~al\mbox{.}(2024)]%
+        {S33}
+\bibfield{author}{\bibinfo{person}{Christopher Keith}, \bibinfo{person}{Michael
+  Robinson}, \bibinfo{person}{Francis Duncan}, \bibinfo{person}{Allan
+  Worthington}, \bibinfo{person}{Joseph Wilson}, {and} \bibinfo{person}{Sofia
+  Harris}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \bibinfo{title}{Optimizing Large Language Models: A Novel Approach
+  Through Dynamic Token Pruning}.
+\newblock \bibinfo{howpublished}{Research Square preprint}.
+\newblock
+\href{https://doi.org/10.21203/rs.3.rs-5293588/v1}{doi:\nolinkurl{10.21203/rs.3.rs-5293588/v1}}
+\newblock
+\shownote{Preprint; verify full text and provenance.}.
+
+
+\bibitem[Khaliq and Adebayo(2026)]%
+        {S21}
+\bibfield{author}{\bibinfo{person}{A. Khaliq} {and} \bibinfo{person}{K.~J.
+  Adebayo}.} \bibinfo{year}{2026}\natexlab{}.
+\newblock \showarticletitle{DKC-LLM: Dynamic Knowledge Caching for Large
+  Language Models in Business Applications}.
+\newblock \bibinfo{journal}{\emph{IEEE Access, 14, 22318--22334}}
+  (\bibinfo{year}{2026}).
+\newblock
+\href{https://doi.org/10.1109/ACCESS.2026.3662344}{doi:\nolinkurl{10.1109/ACCESS.2026.3662344}}
+\newblock
+\shownote{Verify author spelling and final metadata.}.
+
+
+\bibitem[Khan(2026)]%
+        {S40}
+\bibfield{author}{\bibinfo{person}{S. Khan}.} \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{title}{Token Budgets: An Empirical Catalog of 63 LLM-Agent
+  Budget-Overrun Incidents, with an Affine-Typed Rust Mitigation as a Case
+  Study}.
+\newblock \bibinfo{howpublished}{arXiv preprint arXiv:2606.04056}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2606.04056}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Preprint; verify empirical evidence and dataset release.}.
+
+
+\bibitem[Kitchenham and Charters(2007)]%
+        {Kitchenham}
+\bibfield{author}{\bibinfo{person}{Barbara Kitchenham} {and}
+  \bibinfo{person}{Stuart Charters}.} \bibinfo{year}{2007}\natexlab{}.
+\newblock \bibinfo{title}{Guidelines for Performing Systematic Literature
+  Reviews in Software Engineering}.
+\newblock \bibinfo{howpublished}{EBSE Technical Report EBSE-2007-01}.
+\newblock
+\urldef\tempurl%
+\url{https://www.elsevier.com/__data/promis_misc/525444systematicreviewsguide.pdf}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Methodological guidance.}.
+
+
+\bibitem[La~Malfa et~al\mbox{.}(2024)]%
+        {JAIRLMaaS}
+\bibfield{author}{\bibinfo{person}{Emanuele La~Malfa},
+  \bibinfo{person}{Aleksandar Petrov}, \bibinfo{person}{Simon Frieder},
+  \bibinfo{person}{Christoph Weinhuber}, \bibinfo{person}{Ryan Burnell},
+  \bibinfo{person}{Raza Nazar}, \bibinfo{person}{Anthony Cohn},
+  \bibinfo{person}{Nigel Shadbolt}, {and} \bibinfo{person}{Michael
+  Wooldridge}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Language-Models-as-a-Service: Overview of a New
+  Paradigm and its Challenges}.
+\newblock \bibinfo{journal}{\emph{Journal of Artificial Intelligence Research,
+  80}} (\bibinfo{year}{2024}).
+\newblock
+\href{https://doi.org/10.1613/jair.1.15865}{doi:\nolinkurl{10.1613/jair.1.15865}}
+\newblock
+\shownote{Related JAIR survey.}.
+
+
+\bibitem[Lee et~al\mbox{.}(2026)]%
+        {S34}
+\bibfield{author}{\bibinfo{person}{J. Lee}, \bibinfo{person}{K. Ko},
+  \bibinfo{person}{T. Hwang}, \bibinfo{person}{W. Chung}, \bibinfo{person}{H.
+  Kim}, {and} \bibinfo{person}{D. Moon}.} \bibinfo{year}{2026}\natexlab{}.
+\newblock \showarticletitle{Prompt Caching on Flash: Achieving Memory-Class
+  Latency for LLM Inference}. \bibinfo{howpublished}{IEEE Computer Architecture
+  Letters}.
+\newblock
+\href{https://doi.org/10.1109/LCA.2026.3711675}{doi:\nolinkurl{10.1109/LCA.2026.3711675}}
+\newblock
+\shownote{Not present in full-text screening log; workbook lacks DOI and has a
+  different IEEE article identifier.}.
+
+
+\bibitem[Lee and Li(2026)]%
+        {S28}
+\bibfield{author}{\bibinfo{person}{J. Lee} {and} \bibinfo{person}{W.~S. Li}.}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \showarticletitle{Graph-of-Context: Recoverable Fold/Unfold and
+  Scoped Fork for Instrumented Long-Horizon Multi-Turn LLM Agentic Workflows}.
+\newblock \bibinfo{journal}{\emph{IEEE Access, 14, 125889--125903}}
+  (\bibinfo{year}{2026}).
+\newblock
+\href{https://doi.org/10.1109/ACCESS.2026.3721147}{doi:\nolinkurl{10.1109/ACCESS.2026.3721147}}
+\newblock
+\shownote{Verify final metadata and whether paper is within cutoff.}.
+
+
+\bibitem[Liu et~al\mbox{.}(2023)]%
+        {S39}
+\bibfield{author}{\bibinfo{person}{Junyi Liu}, \bibinfo{person}{Liangzhi Li},
+  \bibinfo{person}{Tong Xiang}, \bibinfo{person}{Bowen Wang}, {and}
+  \bibinfo{person}{Yiming Qian}.} \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{TCRA-LLM: Token Compression Retrieval Augmented
+  Large Language Model for Inference Cost Reduction}. In
+  \bibinfo{booktitle}{\emph{Findings of the Association for Computational
+  Linguistics: EMNLP 2023, 9796--9810}}.
+\newblock
+\href{https://doi.org/10.18653/v1/2023.findings-emnlp.655}{doi:\nolinkurl{10.18653/v1/2023.findings-emnlp.655}}
+\newblock
+\shownote{Bibliographic record verified.}.
+
+
+\bibitem[Liu et~al\mbox{.}(2026a)]%
+        {S37}
+\bibfield{author}{\bibinfo{person}{Xutong Liu}, \bibinfo{person}{Baran Atalar},
+  \bibinfo{person}{Xiangxiang Dai}, \bibinfo{person}{Jinhang Zuo},
+  \bibinfo{person}{Siwei Wang}, \bibinfo{person}{John C.~S. Lui},
+  \bibinfo{person}{Wei Chen}, {and} \bibinfo{person}{Carlee Joe-Wong}.}
+  \bibinfo{year}{2026}\natexlab{a}.
+\newblock \bibinfo{title}{Semantic Caching for Low-Cost LLM Serving: From
+  Offline Learning to Online Adaptation}.
+\newblock \bibinfo{howpublished}{IEEE INFOCOM 2026}.
+\newblock
+\urldef\tempurl%
+\url{https://www.microsoft.com/en-us/research/wp-content/uploads/2026/02/infocom25_semanticCaching.pdf}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{The workbook records arXiv/IEEE search metadata; verify proceedings
+  citation.}.
+
+
+\bibitem[Liu et~al\mbox{.}(2026b)]%
+        {S22}
+\bibfield{author}{\bibinfo{person}{Xunzhuo Liu}, \bibinfo{person}{Bowei He},
+  \bibinfo{person}{Xue Liu}, \bibinfo{person}{Andy Luo},
+  \bibinfo{person}{Haichen Zhang}, {and} \bibinfo{person}{Huamin Chen}.}
+  \bibinfo{year}{2026}\natexlab{b}.
+\newblock \bibinfo{title}{Dual-Pool Token-Budget Routing for Cost-Efficient and
+  Reliable LLM Serving}.
+\newblock \bibinfo{howpublished}{arXiv preprint arXiv:2604.08075}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2604.08075}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{GPU-pool routing, not model-to-model routing.}.
+
+
+\bibitem[Ma et~al\mbox{.}(2024)]%
+        {S30}
+\bibfield{author}{\bibinfo{person}{Feihu Ma}, \bibinfo{person}{Xuechen Liang},
+  {and} \bibinfo{person}{Meiling Tao}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{LinguaShrink: Reducing Token Overhead With
+  Psycholinguistics}.
+\newblock \bibinfo{journal}{\emph{IEEE Access, 12, 145095--145105}}
+  (\bibinfo{year}{2024}).
+\newblock
+\href{https://doi.org/10.1109/ACCESS.2024.3470512}{doi:\nolinkurl{10.1109/ACCESS.2024.3470512}}
+\newblock
+\shownote{Bibliographic record verified; note distinct from the similarly named
+  LanguaShrink submission.}.
+
+
+\bibitem[Matsutani et~al\mbox{.}(2026)]%
+        {S01}
+\bibfield{author}{\bibinfo{person}{Hiroki Matsutani}, \bibinfo{person}{Naoki
+  Matsuda}, {and} \bibinfo{person}{Naoto Sugiura}.}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \showarticletitle{Accelerating Local LLMs on Resource-Constrained
+  Edge Devices via Distributed Prompt Caching}. In
+  \bibinfo{booktitle}{\emph{Proceedings of the Sixth European Workshop on
+  Machine Learning and Systems (EuroMLSys 2026)}}.
+\newblock
+\href{https://doi.org/10.1145/3805621.3807647}{doi:\nolinkurl{10.1145/3805621.3807647}}
+\newblock
+\shownote{Study record; verify final proceedings metadata.}.
+
+
+\bibitem[Mehra and Khan(2025)]%
+        {S13}
+\bibfield{author}{\bibinfo{person}{Gautam Mehra} {and} \bibinfo{person}{Danish
+  Khan}.} \bibinfo{year}{2025}\natexlab{}.
+\newblock \bibinfo{title}{Condensed Reasoning Prompting: Efficient Strategies,
+  Evaluations, and Trade-Offs in Large Language Model Reasoning}.
+\newblock \bibinfo{howpublished}{Research Square preprint}.
+\newblock
+\href{https://doi.org/10.21203/rs.3.rs-6170708/v1}{doi:\nolinkurl{10.21203/rs.3.rs-6170708/v1}}
+\newblock
+\shownote{Preprint; not peer reviewed in the cited record.}.
+
+
+\bibitem[Mohandoss(2024)]%
+        {S15}
+\bibfield{author}{\bibinfo{person}{Ramaswami Mohandoss}.}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Context-Based Semantic Caching for LLM
+  Applications}. In \bibinfo{booktitle}{\emph{2024 IEEE Conference on
+  Artificial Intelligence (CAI)}}.
+\newblock
+\href{https://doi.org/10.1109/CAI59869.2024.00075}{doi:\nolinkurl{10.1109/CAI59869.2024.00075}}
+\newblock
+\shownote{Full conference pagination and DOI verified from bibliographic
+  record.}.
+
+
+\bibitem[Ong et~al\mbox{.}(2025)]%
+        {RouteLLM}
+\bibfield{author}{\bibinfo{person}{Isaac Ong}, \bibinfo{person}{Amjad
+  Almahairi}, \bibinfo{person}{Vincent Wu}, \bibinfo{person}{Wei-Lin Chiang},
+  \bibinfo{person}{Tianhao Wu}, \bibinfo{person}{Joseph~E. Gonzalez},
+  \bibinfo{person}{M.~Waleed Kadous}, {and} \bibinfo{person}{Ion Stoica}.}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \showarticletitle{RouteLLM: Learning to Route LLMs from Preference
+  Data}. In \bibinfo{booktitle}{\emph{International Conference on Learning
+  Representations (ICLR 2025)}}.
+\newblock
+\urldef\tempurl%
+\url{https://proceedings.iclr.cc/paper_files/paper/2025/hash/5503a7c69d48a2f86fc00b3dc09de686-Abstract-Conference.html}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Supplementary scope-audit paper; absent from original 41-study set.}.
+
+
+\bibitem[Page et~al\mbox{.}(2021)]%
+        {PRISMA}
+\bibfield{author}{\bibinfo{person}{Matthew~J. Page}, \bibinfo{person}{Joanne~E.
+  McKenzie}, \bibinfo{person}{Patrick~M. Bossuyt}, \bibinfo{person}{Isabelle
+  Boutron}, \bibinfo{person}{Tammy~C. Hoffmann}, \bibinfo{person}{Cynthia~D.
+  Mulrow}, {et~al\mbox{.}}} \bibinfo{year}{2021}\natexlab{}.
+\newblock \showarticletitle{The PRISMA 2020 Statement: An Updated Guideline for
+  Reporting Systematic Reviews}.
+\newblock \bibinfo{journal}{\emph{BMJ, 372, n71}} (\bibinfo{year}{2021}).
+\newblock
+\href{https://doi.org/10.1136/bmj.n71}{doi:\nolinkurl{10.1136/bmj.n71}}
+\newblock
+\shownote{Reporting guideline.}.
+
+
+\bibitem[Plaat et~al\mbox{.}(2025)]%
+        {JAIRAgentic}
+\bibfield{author}{\bibinfo{person}{Aske Plaat}, \bibinfo{person}{Max van
+  Duijn}, \bibinfo{person}{Niki van Stein}, \bibinfo{person}{Mike Preuss},
+  \bibinfo{person}{Peter van~der Putten}, {and} \bibinfo{person}{Kees~Joost
+  Batenburg}.} \bibinfo{year}{2025}\natexlab{}.
+\newblock \showarticletitle{Agentic Large Language Models, a Survey}.
+\newblock \bibinfo{journal}{\emph{Journal of Artificial Intelligence Research,
+  84}} (\bibinfo{year}{2025}).
+\newblock
+\href{https://doi.org/10.1613/jair.1.18675}{doi:\nolinkurl{10.1613/jair.1.18675}}
+\newblock
+\shownote{Related JAIR survey.}.
+
+
+\bibitem[Prakasan et~al\mbox{.}(2026)]%
+        {S35}
+\bibfield{author}{\bibinfo{person}{N. Prakasan}, \bibinfo{person}{S. Kalgundi},
+  \bibinfo{person}{R. Bhat}, {and} \bibinfo{person}{M. Purohit}.}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{title}{Propose Collision-Aware Semantic Hashing Mechanisms
+  for Efficient Caching of LLM Outputs}.
+\newblock \bibinfo{howpublished}{TechRxiv preprint}.
+\newblock
+\href{https://doi.org/10.36227/techrxiv.177155982.21250517/v1}{doi:\nolinkurl{10.36227/techrxiv.177155982.21250517/v1}}
+\newblock
+\shownote{Preprint; verify exact title and version.}.
+
+
+\bibitem[Rao(2025)]%
+        {S23}
+\bibfield{author}{\bibinfo{person}{Amogha Rao}.}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \bibinfo{title}{Edge-Based Token Optimization for Large Language
+  Model Applications: A Proposal for Cost-Efficient Context Management}.
+\newblock \bibinfo{howpublished}{SSRN preprint}.
+\newblock
+\href{https://doi.org/10.2139/ssrn.5585050}{doi:\nolinkurl{10.2139/ssrn.5585050}}
+\newblock
+\shownote{Preprint; verify full text and publication status.}.
+
+
+\bibitem[Regmi and Pun(2024)]%
+        {S27}
+\bibfield{author}{\bibinfo{person}{S. Regmi} {and} \bibinfo{person}{C.~P.
+  Pun}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \bibinfo{title}{GPT Semantic Cache: Reducing LLM Costs and Latency
+  via Semantic Embedding Caching}.
+\newblock \bibinfo{howpublished}{arXiv preprint arXiv:2411.05276}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2411.05276}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Preprint.}.
+
+
+\bibitem[Ruan et~al\mbox{.}(2026)]%
+        {S17}
+\bibfield{author}{\bibinfo{person}{C. Ruan}, \bibinfo{person}{C. Bi},
+  \bibinfo{person}{K. Zheng}, \bibinfo{person}{Z. Shi}, \bibinfo{person}{X.
+  Wan}, {and} \bibinfo{person}{J. Li}.} \bibinfo{year}{2026}\natexlab{}.
+\newblock \showarticletitle{Cortex: Achieving Low-Latency, Cost-Efficient
+  Remote Data Access for LLM via Semantic-Aware Knowledge Caching}. In
+  \bibinfo{booktitle}{\emph{23rd USENIX Symposium on Networked Systems Design
+  and Implementation (NSDI 2026)}}.
+\newblock
+\urldef\tempurl%
+\url{https://www.usenix.org/conference/nsdi26/presentation/ruan-cortex}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Verify final proceedings citation.}.
+
+
+\bibitem[Saeed et~al\mbox{.}(2026)]%
+        {S18}
+\bibfield{author}{\bibinfo{person}{Muhammad~Amir Saeed}, \bibinfo{person}{Sadia
+  Saba}, {and} \bibinfo{person}{Antonio Candelieri}.}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{title}{Cost-Aware Preference-Based Bayesian Optimization for
+  Structured Prompt Configuration of Large Language Models}.
+\newblock \bibinfo{howpublished}{SSRN preprint}.
+\newblock
+\href{https://doi.org/10.2139/ssrn.7308958}{doi:\nolinkurl{10.2139/ssrn.7308958}}
+\newblock
+\shownote{Preprint; not peer reviewed in the cited record.}.
+
+
+\bibitem[Shah and Shridhar(2025)]%
+        {SelectThenRoute}
+\bibfield{author}{\bibinfo{person}{Soham Shah} {and} \bibinfo{person}{Kumar
+  Shridhar}.} \bibinfo{year}{2025}\natexlab{}.
+\newblock \showarticletitle{Select-then-Route: Taxonomy-Guided Routing for
+  LLMs}. In \bibinfo{booktitle}{\emph{Proceedings of the 2025 Conference on
+  Empirical Methods in Natural Language Processing: Industry Track}}.
+\newblock
+\urldef\tempurl%
+\url{https://aclanthology.org/2025.emnlp-industry.28/}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Supplementary scope-audit paper; absent from original 41-study set.}.
+
+
+\bibitem[Singh et~al\mbox{.}(2026)]%
+        {S06}
+\bibfield{author}{\bibinfo{person}{A.~K. Singh}, \bibinfo{person}{H. Wang},
+  \bibinfo{person}{L.~N.~S. Attaluri}, \bibinfo{person}{T. Chiam},
+  {et~al\mbox{.}}} \bibinfo{year}{2026}\natexlab{}.
+\newblock \showarticletitle{Asynchronous Verified Semantic Caching for Tiered
+  LLM Architectures}. In \bibinfo{booktitle}{\emph{Proceedings of the Sixth
+  European Workshop on Machine Learning and Systems (EuroMLSys 2026)}}.
+\newblock
+\href{https://doi.org/10.1145/3805621.3807627}{doi:\nolinkurl{10.1145/3805621.3807627}}
+\newblock
+\shownote{Full author list and page range require verification.}.
+
+
+\bibitem[Song(2026)]%
+        {S09}
+\bibfield{author}{\bibinfo{person}{Y. Song}.} \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{title}{Cache-Aware Prompt Compression: A Two-Tier Cost Model
+  for LLM API Caching}.
+\newblock \bibinfo{howpublished}{arXiv preprint arXiv:2607.15516}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2607.15516}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Single-author metadata and preprint version require verification.}.
+
+
+\bibitem[Varangot-Reille et~al\mbox{.}(2026)]%
+        {JAIRRoutingSurvey}
+\bibfield{author}{\bibinfo{person}{Clovis Varangot-Reille},
+  \bibinfo{person}{Christophe Bouvard}, \bibinfo{person}{Mathieu Ciancone},
+  \bibinfo{person}{Antoine Gourru}, \bibinfo{person}{Marion Schaeffer}, {and}
+  \bibinfo{person}{Francois Jacquenet}.} \bibinfo{year}{2026}\natexlab{}.
+\newblock \showarticletitle{Doing More with Less: A Survey on Routing
+  Strategies for Resource Optimisation in Large Language Model-Based Systems}.
+\newblock \bibinfo{journal}{\emph{Journal of Artificial Intelligence Research}}
+   \bibinfo{volume}{86} (\bibinfo{year}{2026}).
+\newblock
+\href{https://doi.org/10.1613/jair.1.19801}{doi:\nolinkurl{10.1613/jair.1.19801}}
+\newblock
+\shownote{Closest JAIR survey; must be explicitly differentiated.}.
+
+
+\bibitem[Vu et~al\mbox{.}(2026)]%
+        {S29}
+\bibfield{author}{\bibinfo{person}{T.~A. Vu}, \bibinfo{person}{J. Agoun},
+  \bibinfo{person}{C. Bertolissi}, \bibinfo{person}{L.~D. Orazio},
+  {et~al\mbox{.}}} \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{title}{LANTERN: A Cost-Aware Pipeline for Web Attack
+  Detection with LLM Verification and Semantic Caching}.
+\newblock \bibinfo{howpublished}{HAL-hosted conference manuscript}.
+\newblock
+\urldef\tempurl%
+\url{https://hal.science/hal-05747572/}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Verify venue, date, and camera-ready record.}.
+
+
+\bibitem[Wang et~al\mbox{.}(2025)]%
+        {S11}
+\bibfield{author}{\bibinfo{person}{Chen Wang}, \bibinfo{person}{Xunzhuo Liu},
+  \bibinfo{person}{Yue Zhu}, \bibinfo{person}{Alaa Youssef},
+  \bibinfo{person}{Priya Nagpurkar}, {and} \bibinfo{person}{Huamin Chen}.}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \bibinfo{title}{Category-Aware Semantic Caching for Heterogeneous LLM
+  Workloads}.
+\newblock \bibinfo{howpublished}{arXiv preprint arXiv:2510.26835}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2510.26835}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Preprint.}.
+
+
+\bibitem[Yin and Xu(2026)]%
+        {S07}
+\bibfield{author}{\bibinfo{person}{Shiyuan Yin} {and} \bibinfo{person}{Haotian
+  Xu}.} \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{title}{Attention Entropy as a Token Importance Signal for
+  Large Language Models}.
+\newblock \bibinfo{howpublished}{SSRN preprint}.
+\newblock
+\href{https://doi.org/10.2139/ssrn.7362482}{doi:\nolinkurl{10.2139/ssrn.7362482}}
+\newblock
+\shownote{Preprint; not peer reviewed in the cited record.}.
+
+
+\bibitem[Zhang et~al\mbox{.}(2026b)]%
+        {S36}
+\bibfield{author}{\bibinfo{person}{D. Zhang}, \bibinfo{person}{H. Yu},
+  \bibinfo{person}{J. Huo}, {and} \bibinfo{person}{M. Su}.}
+  \bibinfo{year}{2026}\natexlab{b}.
+\newblock \showarticletitle{SAC-RAG: Semantic Adaptive Context Compression for
+  Retrieval-Augmented Generation}.
+\newblock \bibinfo{journal}{\emph{IEEE Access, 14, 117406--117418}}
+  (\bibinfo{year}{2026}).
+\newblock
+\href{https://doi.org/10.1109/ACCESS.2026.3718025}{doi:\nolinkurl{10.1109/ACCESS.2026.3718025}}
+\newblock
+\shownote{Verify final metadata and publication date.}.
+
+
+\bibitem[Zhang et~al\mbox{.}(2026a)]%
+        {S12}
+\bibfield{author}{\bibinfo{person}{Jianfeng Zhang}, \bibinfo{person}{Lingxi
+  Cui}, \bibinfo{person}{Yongqin Xu}, \bibinfo{person}{Tong Wang},
+  \bibinfo{person}{Yi Guo}, \bibinfo{person}{Zhouzhi Yang},
+  \bibinfo{person}{Huan Li}, \bibinfo{person}{Ke Chen}, {and}
+  \bibinfo{person}{Lidan Shou}.} \bibinfo{year}{2026}\natexlab{a}.
+\newblock \showarticletitle{ChronosBI: Supercharging LLM-Powered Business
+  Intelligence Pipelines with Semantic Caching and Cost Planning}. In
+  \bibinfo{booktitle}{\emph{Companion of the 2026 ACM SIGMOD/PODS Conference}}.
+\newblock
+\href{https://doi.org/10.1145/3788853.3801580}{doi:\nolinkurl{10.1145/3788853.3801580}}
+\newblock
+\shownote{Conference/demo status should be stated accurately.}.
+
+
+\bibitem[Zhu et~al\mbox{.}(2024)]%
+        {S25}
+\bibfield{author}{\bibinfo{person}{H. Zhu}, \bibinfo{person}{B. Zhu}, {and}
+  \bibinfo{person}{J. Jiao}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \bibinfo{title}{Efficient Prompt Caching for Large Language Model
+  Inference via Embedding Similarity}.
+\newblock \bibinfo{howpublished}{OpenReview manuscript}.
+\newblock
+\urldef\tempurl%
+\url{https://openreview.net/pdf?id=7eg9DuEVn8}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Confirm canonical title, version, venue and publication status.}.
+
+
+\end{thebibliography}
